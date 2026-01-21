@@ -2,7 +2,8 @@
 #include <stdbool.h>
 #include "entity.h"
 #include "game.h"
-
+#include "enemy.h"
+    
 int main(void)
 {
     SDL_Window *window = NULL;
@@ -26,6 +27,10 @@ int main(void)
 
     Entity bullet = {0};
     bool bullet_active = false;
+    
+    Uint8 lignes = 3 ;
+    Entity wave[lignes * ENEMY_NUMBER] ;
+    new_wave(wave, lignes) ;
 
     while (running)
     {
@@ -38,8 +43,11 @@ int main(void)
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         handle_input(&running, keys, &player, &bullet, &bullet_active);
-        update(&player, &bullet, &bullet_active, dt);
-        render(renderer, &player, &bullet, bullet_active);
+        update_pos(&player, &bullet, &bullet_active, dt);
+        if (bullet_active){
+            kill_enemy(&bullet, &bullet_active, wave, lignes);
+        }   
+        render(renderer, &player, &bullet, wave, bullet_active, lignes);
     }
 
     cleanup(window, renderer);

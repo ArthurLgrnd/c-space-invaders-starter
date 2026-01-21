@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include "game.h"
+#include "enemy.h"
 #include <stdio.h>
 
 bool init(SDL_Window **window, SDL_Renderer **renderer)
@@ -57,7 +58,7 @@ void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bull
     }
 }
 
-void update(Entity *player, Entity *bullet, bool *bullet_active, float dt)
+void update_pos(Entity *player, Entity *bullet, bool *bullet_active, float dt)
 {
     player->x += player->vx * dt;
 
@@ -74,7 +75,18 @@ void update(Entity *player, Entity *bullet, bool *bullet_active, float dt)
     }
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, bool bullet_active)
+void kill_enemy(Entity *bullet, bool *bullet_active, Entity *wave, Uint8 lignes){
+    Uint8 i;
+    for (i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+        if ((wave[i].y < bullet->y) && (bullet->y < wave[i].y + wave[i].h) && (wave[i].x < bullet->x) && (bullet->x < wave[i].x + wave[i].w)){
+            wave[i].x = -10-ENEMY_WIDTH ;
+            *bullet_active = false ;
+            break ;
+        }
+    }
+}
+
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Entity *wave, bool bullet_active, Uint8 lignes)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -84,6 +96,14 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, bool bullet_
         player->w, player->h};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &player_rect);
+    
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
+    for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+        SDL_Rect enemy_rect = {
+        (int)wave[i].x, (int)wave[i].y,
+        wave[i].w, wave[i].h} ;
+        SDL_RenderFillRect(renderer, &enemy_rect) ;
+    }
 
     if (bullet_active)
     {
