@@ -12,7 +12,7 @@
 #define PLAYER_HEIGHT 20
 #define PLAYER_SPEED 400.0f
 
-#define BULLET_WIDTH 10
+#define BULLET_WIDTH 5
 #define BULLET_HEIGHT 20
 #define BULLET_SPEED 600.0f
 

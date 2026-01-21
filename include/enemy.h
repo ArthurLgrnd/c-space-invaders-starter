@@ -3,8 +3,8 @@
 
 #define ENEMY_NUMBER 10 
 #define ENEMY_WIDTH 40
-#define ENEMY_HEIGHT 30
+#define ENEMY_HEIGHT 20
 
-void new_wave(Entity* wave, Uint8 lignes ) ;
+void new_wave(Entity* wave, Uint8 lignes) ;
 
 #endif
