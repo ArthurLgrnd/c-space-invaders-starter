@@ -80,11 +80,36 @@ void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes){
     for (i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
             wave[i].x = -10-ENEMY_WIDTH ;
+            wave[i].alive = false ;
             *bullet_active = false ;
             break ;
         }
     }
 }
+
+void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop){
+    if (!*last_move_drop){
+        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+            if (wave[i].alive==1 && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
+                for (Uint8 j=0 ; j<lignes*ENEMY_NUMBER ; j++){
+                    wave[j].y+=ENEMY_DROP ;
+                }
+                *move_sens*=-1 ;
+                *last_move_drop = true ;
+                break ;
+            }
+        }
+    }
+    else{*last_move_drop=false;}
+    if (!*last_move_drop){
+        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+            if (wave[i].alive==1){
+                wave[i].x+=ENEMY_MOVE* *move_sens ;
+            }
+        }
+    }
+}    
+
 
 void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes)
 {

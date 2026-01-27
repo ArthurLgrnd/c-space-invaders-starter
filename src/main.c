@@ -26,10 +26,16 @@ int main(void)
         .vy = 0};
 
     Entity bullet = {0};
+
     bool bullet_active = false;
-    
+    Uint32 last_move = last_ticks ;
+    float move_time = 0.5 ;
+    short move_sens = 1 ;
+    bool last_move_drop = true ;
+
     Uint8 lignes = 3 ;
-    Enemy wave[lignes * ENEMY_NUMBER] ;
+    Enemy* wave = malloc (sizeof(Enemy)*lignes*ENEMY_NUMBER) ;
+
     new_wave(wave, lignes) ;
 
     while (running)
@@ -46,6 +52,10 @@ int main(void)
         update_pos(&player, &bullet, &bullet_active, dt);
         if (bullet_active){
             kill_enemy(&bullet, &bullet_active, wave, lignes);
+        }
+        if ((ticks - last_move)/1000.0f > move_time){
+            last_move+= move_time*1000.0f ;
+            update_enemy(wave, lignes, &move_sens, &last_move_drop) ;
         }   
         render(renderer, &player, &bullet, wave, bullet_active, lignes);
     }

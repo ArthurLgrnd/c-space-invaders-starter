@@ -2,8 +2,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs`
+# ajouter --lSDL_ttf si librairie importée
 
-# Dossiers
+#Dossiers
 SRC_DIR = src
 BUILD_DIR = build
 
