@@ -1,11 +1,11 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "entity.h"
 #include "game.h"
 #include "enemy.h"
     
-int main(void)
-{
+int main(void){
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
@@ -35,8 +35,14 @@ int main(void)
 
     Uint8 lignes = 3 ;
     Enemy* wave = malloc (sizeof(Enemy)*lignes*ENEMY_NUMBER) ;
+    Uint8 enemy_compt = 0 ;
 
-    new_wave(wave, lignes) ;
+    Uint8 enemy_bullet_compt = 0 ;
+    Entity* enemy_bullet = malloc(sizeof(Entity)*10); //10 emplacement pour tirs ennemis
+    float enemy_bullet_time = 1 ;
+    Uint32 last_bullet = last_ticks ;
+
+    new_wave(wave, lignes, &enemy_compt) ;
 
     while (running)
     {
@@ -49,17 +55,22 @@ int main(void)
         SDL_PumpEvents();
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         handle_input(&running, keys, &player, &bullet, &bullet_active);
-        update_pos(&player, &bullet, &bullet_active, dt);
+        if ((ticks-last_bullet)/1000.0f > enemy_bullet_time){
+            last_bullet+=enemy_bullet_time*1000.0f;
+            new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
+        }
+        update_pos(&player, &bullet, &bullet_active, enemy_bullet, &enemy_bullet_compt, dt);
         if (bullet_active){
-            kill_enemy(&bullet, &bullet_active, wave, lignes);
+            kill_enemy(&bullet, &bullet_active, wave, lignes, &enemy_compt);
         }
         if ((ticks - last_move)/1000.0f > move_time){
             last_move+= move_time*1000.0f ;
             update_enemy(wave, lignes, &move_sens, &last_move_drop) ;
-        }   
-        render(renderer, &player, &bullet, wave, bullet_active, lignes);
+        }
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt);
     }
 
+    free(wave);
     cleanup(window, renderer);
     return 0;
 }

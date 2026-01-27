@@ -2,6 +2,7 @@
 #include "game.h"
 #include "enemy.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 bool init(SDL_Window **window, SDL_Renderer **renderer)
 {
@@ -58,7 +59,18 @@ void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bull
     }
 }
 
-void update_pos(Entity *player, Entity *bullet, bool *bullet_active, float dt)
+void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
+    int shooter = rand() % enemy_compt ;
+    enemy_bullet[*enemy_bullet_compt].x = wave[shooter].x + ENEMY_WIDTH/2 ;
+    enemy_bullet[*enemy_bullet_compt].y = wave[shooter].y + ENEMY_HEIGHT ;
+    enemy_bullet[*enemy_bullet_compt].vx = 0 ;
+    enemy_bullet[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
+    enemy_bullet[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
+    enemy_bullet[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
+    *enemy_bullet_compt+=1 ;
+}
+
+void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* enemy_bullet, Uint8* enemy_bullet_compt, float dt)
 {
     player->x += player->vx * dt;
 
@@ -67,21 +79,26 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, float dt)
     if (player->x + player->w > SCREEN_WIDTH)
         player->x = SCREEN_WIDTH - player->w;
 
-    if (*bullet_active)
-    {
+    if (*bullet_active){
         bullet->y += bullet->vy * dt;
         if (bullet->y + bullet->h < 0)
             *bullet_active = false;
     }
+    for (int i=0 ; i<*enemy_bullet_compt ; i++){
+        enemy_bullet[i].y += enemy_bullet[i].vy * dt ;
+    //Il faut ajouter que la balle disparait si hors bordures
+    }
+    
 }
 
-void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes){
+void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, Uint8* enemy_compt){
     Uint8 i;
     for (i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
             wave[i].x = -10-ENEMY_WIDTH ;
             wave[i].alive = false ;
             *bullet_active = false ;
+            *enemy_compt-=1 ;
             break ;
         }
     }
@@ -111,7 +128,7 @@ void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_d
 }    
 
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -125,8 +142,8 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         SDL_Rect enemy_rect = {
-        (int)wave[i].x, (int)wave[i].y,
-        wave[i].w, wave[i].h} ;
+            (int)wave[i].x, (int)wave[i].y,
+            wave[i].w, wave[i].h} ;
         SDL_RenderFillRect(renderer, &enemy_rect) ;
     }
 
@@ -138,7 +155,13 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &bullet_rect);
     }
-
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    for (int i=0 ; i<*enemy_bullet_compt ; i++){
+        SDL_Rect enemy_bullet_rect = {
+            (int)enemy_bullet[i].x, (int)enemy_bullet[i].y,
+            enemy_bullet[i].w, enemy_bullet[i].h};
+        SDL_RenderFillRect(renderer, &enemy_bullet_rect);
+    }
     SDL_RenderPresent(renderer);
 }
 
