@@ -29,7 +29,7 @@ int main(void)
     bool bullet_active = false;
     
     Uint8 lignes = 3 ;
-    Entity wave[lignes * ENEMY_NUMBER] ;
+    Enemy wave[lignes * ENEMY_NUMBER] ;
     new_wave(wave, lignes) ;
 
     while (running)

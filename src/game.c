@@ -75,7 +75,7 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, float dt)
     }
 }
 
-void kill_enemy(Entity *bullet, bool *bullet_active, Entity *wave, Uint8 lignes){
+void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes){
     Uint8 i;
     for (i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
@@ -86,7 +86,7 @@ void kill_enemy(Entity *bullet, bool *bullet_active, Entity *wave, Uint8 lignes)
     }
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Entity *wave, bool bullet_active, Uint8 lignes)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
