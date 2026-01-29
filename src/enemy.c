@@ -16,3 +16,41 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
     *enemy_compt=lignes*ENEMY_NUMBER ;
 }
 
+
+void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
+    if (enemy_compt > 0){
+        int shooter = rand() % enemy_compt ;
+        enemy_bullet[*enemy_bullet_compt].x = wave[shooter].x + ENEMY_WIDTH/2 ;
+        enemy_bullet[*enemy_bullet_compt].y = wave[shooter].y + ENEMY_HEIGHT ;
+        enemy_bullet[*enemy_bullet_compt].vx = 0 ;
+        enemy_bullet[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
+        enemy_bullet[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
+        enemy_bullet[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
+        *enemy_bullet_compt+=1 ;
+    }
+    
+}
+
+
+void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop){
+    if (!*last_move_drop){
+        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+            if (wave[i].alive==1 && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
+                for (Uint8 j=0 ; j<lignes*ENEMY_NUMBER ; j++){
+                    wave[j].y+=ENEMY_DROP ;
+                }
+                *move_sens*=-1 ;
+                *last_move_drop = true ;
+                break ;
+            }
+        }
+    }
+    else{*last_move_drop=false;}
+    if (!*last_move_drop){
+        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+            if (wave[i].alive==1){
+                wave[i].x+=ENEMY_MOVE* *move_sens ;
+            }
+        }
+    }
+}

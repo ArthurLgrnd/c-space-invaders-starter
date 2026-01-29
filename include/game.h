@@ -20,10 +20,9 @@
 
 bool init(SDL_Window **window, SDL_Renderer **renderer);
 void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bullet, bool *bullet_active);
-void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet);
 void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* enemy_bullet, Uint8* enemy_bullet_compt, float dt);
 void kill_enemy(Entity* bullet, bool* bullet_active, Enemy* wave, Uint8 lignes, Uint8* enemy_compt);
-void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop) ;
+void damage_player(Entity* enemy_bullet, Uint8* enemy_bullet_compt, Entity player, Uint8* lives) ;
 void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt);
 void cleanup(SDL_Window *window, SDL_Renderer *renderer);
 

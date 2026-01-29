@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "game.h"
 #include "enemy.h"
+#include "entity.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -59,16 +60,6 @@ void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bull
     }
 }
 
-void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
-    int shooter = rand() % enemy_compt ;
-    enemy_bullet[*enemy_bullet_compt].x = wave[shooter].x + ENEMY_WIDTH/2 ;
-    enemy_bullet[*enemy_bullet_compt].y = wave[shooter].y + ENEMY_HEIGHT ;
-    enemy_bullet[*enemy_bullet_compt].vx = 0 ;
-    enemy_bullet[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
-    enemy_bullet[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
-    enemy_bullet[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
-    *enemy_bullet_compt+=1 ;
-}
 
 void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* enemy_bullet, Uint8* enemy_bullet_compt, float dt)
 {
@@ -86,14 +77,19 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* ene
     }
     for (int i=0 ; i<*enemy_bullet_compt ; i++){
         enemy_bullet[i].y += enemy_bullet[i].vy * dt ;
-    //Il faut ajouter que la balle disparait si hors bordures
+        if (enemy_bullet[i].y>SCREEN_HEIGHT){
+            *enemy_bullet_compt-=1;
+            for (int j = i ; j<*enemy_bullet_compt ; j++){
+                enemy_bullet[j]=enemy_bullet[j+1] ;
+            }
+            i-=1 ;
+        }
     }
     
 }
 
 void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, Uint8* enemy_compt){
-    Uint8 i;
-    for (i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+    for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
             wave[i].x = -10-ENEMY_WIDTH ;
             wave[i].alive = false ;
@@ -104,28 +100,19 @@ void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, 
     }
 }
 
-void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop){
-    if (!*last_move_drop){
-        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
-            if (wave[i].alive==1 && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
-                for (Uint8 j=0 ; j<lignes*ENEMY_NUMBER ; j++){
-                    wave[j].y+=ENEMY_DROP ;
-                }
-                *move_sens*=-1 ;
-                *last_move_drop = true ;
-                break ;
+void damage_player(Entity* enemy_bullet, Uint8* enemy_bullet_compt, Entity player, Uint8* lives){
+    for (Uint8 i=0 ; i<*enemy_bullet_compt ; i++){
+        if ((((player.y <= enemy_bullet[i].y) && (enemy_bullet[i].y <= player.y + player.h)) || ((player.y <= enemy_bullet[i].y + enemy_bullet[i].h) && (enemy_bullet[i].y + enemy_bullet[i].h <= player.y + player.h)) ) && (((player.x <= enemy_bullet[i].x) && (enemy_bullet[i].x <= player.x + player.w)) || ((player.x <= enemy_bullet[i].x + enemy_bullet[i].w) && (enemy_bullet[i].x + enemy_bullet[i].w <= player.x + player.w)) ) ){
+            *lives -= 1 ;
+            *enemy_bullet_compt -= 1;
+            for (int j = i ; j<*enemy_bullet_compt ; j++){
+                enemy_bullet[j]=enemy_bullet[j+1] ;
             }
+            i-=1 ;
         }
     }
-    else{*last_move_drop=false;}
-    if (!*last_move_drop){
-        for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
-            if (wave[i].alive==1){
-                wave[i].x+=ENEMY_MOVE* *move_sens ;
-            }
-        }
-    }
-}    
+}
+
 
 
 void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt)
