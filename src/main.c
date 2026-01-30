@@ -76,9 +76,12 @@ int main(void){
            win = false ;
            break ;
         }
-        bool test_enemy_down = enemy_down(wave,lignes) ;
+        if (enemy_compt <= 0){
+            win = true ; 
+            break ;
+        }
         
-        if (test_enemy_down){
+        if (enemy_down(wave,lignes)){
             win = false ;
             break ;
         }
