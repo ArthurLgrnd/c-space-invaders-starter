@@ -22,6 +22,7 @@ typedef struct
 void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_number) ;
 void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet);
 void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop) ;
+bool enemy_down(Enemy* wave, Uint8 lignes) ;
 
 
 

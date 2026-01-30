@@ -15,6 +15,7 @@ int main(void){
     }
 
     bool running = true;
+    bool win ;
     Uint8 lives = 3 ;
     Uint32 last_ticks = SDL_GetTicks();
 
@@ -30,7 +31,7 @@ int main(void){
 
     bool bullet_active = false;
     Uint32 last_move = last_ticks ;
-    float move_time = 0.5 ;
+    float move_time = 0.3 ;
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
@@ -70,11 +71,21 @@ int main(void){
             new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
         }
         render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt);
+        
         if (lives <= 0){
-            running = false ;
+           win = false ;
+           break ;
+        }
+        bool test_enemy_down = enemy_down(wave,lignes) ;
+        
+        if (test_enemy_down){
+            win = false ;
+            break ;
         }
     }
 
+    if (win) printf("vous avez gagné \n") ;
+    else printf("vous avez perdu \n") ;
     free(wave);
     cleanup(window, renderer);
     return 0;

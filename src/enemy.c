@@ -20,8 +20,16 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
 void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
     if (enemy_compt > 0){
         int shooter = rand() % enemy_compt ;
-        enemy_bullet[*enemy_bullet_compt].x = wave[shooter].x + ENEMY_WIDTH/2 ;
-        enemy_bullet[*enemy_bullet_compt].y = wave[shooter].y + ENEMY_HEIGHT ;
+        Uint8 i = 0 ;
+        Uint8 j = 0 ;
+        while (i<=shooter){
+            if (wave[j].alive==true){
+                i+=1 ;
+            }
+            j+=1 ;
+        } //choix d'un ennemi en vie au hasard
+        enemy_bullet[*enemy_bullet_compt].x = wave[j-1].x + ENEMY_WIDTH/2 ;
+        enemy_bullet[*enemy_bullet_compt].y = wave[j-1].y + ENEMY_HEIGHT ;
         enemy_bullet[*enemy_bullet_compt].vx = 0 ;
         enemy_bullet[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
         enemy_bullet[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
@@ -53,4 +61,16 @@ void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_d
             }
         }
     }
+}
+
+bool enemy_down(Enemy* wave, Uint8 lignes){
+    for (int8_t i = lignes * ENEMY_NUMBER - 1 ; i>=0 ; i-=1){
+        if (wave[i].alive==1){
+            if (wave[i].y + wave[i].h >= SCREEN_HEIGHT - 60){
+                return true ;
+            }
+            break ;
+        }
+    }
+    return false ;
 }
