@@ -40,8 +40,9 @@ int main(void){
     Uint8 enemy_compt = 0 ;
 
     Uint8 enemy_bullet_compt = 0 ;
-    Entity* enemy_bullet = malloc(sizeof(Entity)*10); //10 emplacement pour tirs ennemis
-    float enemy_bullet_time = 0.8 ;
+    Entity* enemy_bullet = malloc(sizeof(Entity)*2);
+    Uint8 enemy_bullet_max = 2 ; // maximum de tirs ennemis stockables pour le moment
+    float enemy_bullet_time = 0.2 ;
     Uint32 last_bullet = last_ticks ;
 
     new_wave(wave, lignes, &enemy_compt) ;
@@ -68,7 +69,11 @@ int main(void){
         }
         if ((ticks-last_bullet)/1000.0f > enemy_bullet_time){
             last_bullet+=enemy_bullet_time*1000.0f;
-            new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
+            if (enemy_bullet_max == enemy_bullet_compt){
+                enemy_bullet_max += 1 ;
+                enemy_bullet = realloc(enemy_bullet, sizeof(Entity)*enemy_bullet_max) ;
+            }
+            new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet, &enemy_bullet_max);
         }
         render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt);
         
@@ -90,6 +95,7 @@ int main(void){
     if (win) printf("vous avez gagné \n") ;
     else printf("vous avez perdu \n") ;
     free(wave);
+    free(enemy_bullet);
     cleanup(window, renderer);
     return 0;
 }

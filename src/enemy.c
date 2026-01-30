@@ -17,7 +17,7 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
 }
 
 
-void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
+void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet, Uint8* enemy_bullet_max){
     if (enemy_compt > 0){
         int shooter = rand() % enemy_compt ;
         Uint8 i = 0 ;
