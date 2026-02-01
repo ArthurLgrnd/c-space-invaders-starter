@@ -1,7 +1,7 @@
 # Compiler & flags
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude `sdl2-config --cflags`
-LDFLAGS = `sdl2-config --libs`
+LDFLAGS = `sdl2-config --libs` -lSDL2_image
 # ajouter --lSDL_ttf si librairie importée
 
 #Dossiers

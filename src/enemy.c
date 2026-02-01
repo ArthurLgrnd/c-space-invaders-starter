@@ -17,7 +17,7 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
 }
 
 
-void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet, Uint8* enemy_bullet_max){
+void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
     if (enemy_compt > 0){
         int shooter = rand() % enemy_compt ;
         Uint8 i = 0 ;
@@ -40,7 +40,7 @@ void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt,
 }
 
 
-void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop){
+void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop, float* move_time){
     if (!*last_move_drop){
         for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
             if (wave[i].alive==1 && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
@@ -49,6 +49,7 @@ void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_d
                 }
                 *move_sens*=-1 ;
                 *last_move_drop = true ;
+                *move_time *=0.9 ;
                 break ;
             }
         }

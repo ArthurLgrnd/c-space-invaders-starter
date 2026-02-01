@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "entity.h"
@@ -6,8 +7,11 @@
 #include "enemy.h"
     
 int main(void){
+    int img_Flags = IMG_INIT_PNG;
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
+    SDL_Surface* heart = IMG_Load("./coeur.png") ;
+    
 
     if (!init(&window, &renderer))
     {
@@ -31,7 +35,7 @@ int main(void){
 
     bool bullet_active = false;
     Uint32 last_move = last_ticks ;
-    float move_time = 0.3 ;
+    float move_time = 1 ;
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
@@ -42,7 +46,7 @@ int main(void){
     Uint8 enemy_bullet_compt = 0 ;
     Entity* enemy_bullet = malloc(sizeof(Entity)*2);
     Uint8 enemy_bullet_max = 2 ; // maximum de tirs ennemis stockables pour le moment
-    float enemy_bullet_time = 0.2 ;
+    float enemy_bullet_time = 0.8 ;
     Uint32 last_bullet = last_ticks ;
 
     new_wave(wave, lignes, &enemy_compt) ;
@@ -65,7 +69,7 @@ int main(void){
         damage_player(enemy_bullet, &enemy_bullet_compt, player, &lives) ;
         if ((ticks - last_move)/1000.0f > move_time){
             last_move+= move_time*1000.0f ;
-            update_enemy(wave, lignes, &move_sens, &last_move_drop) ;
+            update_enemy(wave, lignes, &move_sens, &last_move_drop, &move_time) ;
         }
         if ((ticks-last_bullet)/1000.0f > enemy_bullet_time){
             last_bullet+=enemy_bullet_time*1000.0f;
@@ -73,9 +77,9 @@ int main(void){
                 enemy_bullet_max += 1 ;
                 enemy_bullet = realloc(enemy_bullet, sizeof(Entity)*enemy_bullet_max) ;
             }
-            new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet, &enemy_bullet_max);
+            new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt);
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart);
         
         if (lives <= 0){
            win = false ;

@@ -1,9 +1,12 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include "game.h"
 #include "enemy.h"
 #include "entity.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+
 
 bool init(SDL_Window **window, SDL_Renderer **renderer)
 {
@@ -115,7 +118,7 @@ void damage_player(Entity* enemy_bullet, Uint8* enemy_bullet_compt, Entity playe
 
 
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Surface* heart)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -132,6 +135,8 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
             (int)wave[i].x, (int)wave[i].y,
             wave[i].w, wave[i].h} ;
         SDL_RenderFillRect(renderer, &enemy_rect) ;
+    
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     }
 
     if (bullet_active)
@@ -149,7 +154,11 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
             enemy_bullet[i].w, enemy_bullet[i].h};
         SDL_RenderFillRect(renderer, &enemy_bullet_rect);
     }
+    SDL_Texture* heart1=SDL_CreateTextureFromSurface(renderer,heart);
+    SDL_Rect rect = {50,10,50,50};
+    SDL_RenderCopy(renderer,heart1,NULL,&rect);
     SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(heart1) ;
 }
 
 void cleanup(SDL_Window *window, SDL_Renderer *renderer)
