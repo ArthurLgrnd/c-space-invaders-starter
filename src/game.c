@@ -35,7 +35,7 @@ void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bull
 }
 
 
-void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* enemy_bullet, Uint8* enemy_bullet_compt, float dt)
+void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, float dt)
 {
     player->x += player->vx * dt;
 
@@ -64,19 +64,32 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* ene
 void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, Uint8* enemy_compt){
     for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
-            wave[i].x = -10-ENEMY_WIDTH ;
-            wave[i].alive = false ;
+            if (wave[i].type == SHIELD){
+                wave[i].type = BR_SHIELD ;
+            }
+            else if (wave[i].type == BR_SHIELD){
+                wave[i].type = NO_SHIELD ;
+            }
+            else{
+                wave[i].x = -10-ENEMY_WIDTH ;
+                wave[i].alive = false ;
+                *enemy_compt-=1 ;
+            }
             *bullet_active = false ;
-            *enemy_compt-=1 ;
             break ;
         }
     }
 }
 
-void damage_player(Entity* enemy_bullet, Uint8* enemy_bullet_compt, Entity player, Uint8* lives){
+void damage_player(Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, Entity player, Uint8* lives){
     for (Uint8 i=0 ; i<*enemy_bullet_compt ; i++){
         if ((((player.y <= enemy_bullet[i].y) && (enemy_bullet[i].y <= player.y + player.h)) || ((player.y <= enemy_bullet[i].y + enemy_bullet[i].h) && (enemy_bullet[i].y + enemy_bullet[i].h <= player.y + player.h)) ) && (((player.x <= enemy_bullet[i].x) && (enemy_bullet[i].x <= player.x + player.w)) || ((player.x <= enemy_bullet[i].x + enemy_bullet[i].w) && (enemy_bullet[i].x + enemy_bullet[i].w <= player.x + player.w)) ) ){
-            *lives -= 1 ;
+            if (enemy_bullet[i].mushroom){
+                *lives += 1 ;
+            }
+            else{
+                *lives -= 1 ;
+            }
             *enemy_bullet_compt -= 1;
             for (int j = i ; j<*enemy_bullet_compt ; j++){
                 enemy_bullet[j]=enemy_bullet[j+1] ;

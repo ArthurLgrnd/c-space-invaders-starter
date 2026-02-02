@@ -61,7 +61,7 @@ void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
     invaders[8]=init_image(renderer, "./images/invaders_healer.png");
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -93,12 +93,18 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &bullet_rect);
     }
+
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
     for (int i=0 ; i<*enemy_bullet_compt ; i++){
         SDL_Rect enemy_bullet_rect = {
             (int)enemy_bullet[i].x, (int)enemy_bullet[i].y,
             enemy_bullet[i].w, enemy_bullet[i].h};
-        SDL_RenderFillRect(renderer, &enemy_bullet_rect);
+        if (enemy_bullet[i].mushroom){
+            SDL_RenderCopy(renderer, mushroom, NULL, &enemy_bullet_rect);
+        }
+        else{
+            SDL_RenderFillRect(renderer, &enemy_bullet_rect);
+        }
     }
     for (int i=0 ; i<lives ; i++){
     SDL_Rect heart_size = {500 + i*60, 10, 50, 50};

@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include "entity.h"
 #include "game.h"
 #include "enemy.h"
@@ -11,32 +12,79 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
         wave[i].alive = true ;
         wave[i].w = ENEMY_WIDTH ;
         wave[i].h = ENEMY_HEIGHT ;
-        wave[i].type = 1 ;
+        wave[i].type = HEALER ;
     }
     *enemy_compt=lignes*ENEMY_NUMBER ;
 }
 
 
-void new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Entity* enemy_bullet){
+bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Uint8* enemy_bullet_max, Enemy_bullet** enemy_bullet, Uint8 lignes){
     if (enemy_compt > 0){
+        if (*enemy_bullet_max == *enemy_bullet_compt){
+            *enemy_bullet_max += 1 ;
+            Enemy_bullet* tmp = realloc(*enemy_bullet, sizeof(Enemy_bullet)**enemy_bullet_max) ;
+            if (tmp == NULL){
+                SDL_Log("Erreur realloc enemy_bullet");
+                return false;
+            }
+            *enemy_bullet=tmp ;
+        }
         int shooter = rand() % enemy_compt ;
         Uint8 i = 0 ;
         Uint8 j = 0 ;
-        while (i<=shooter){
+        while ( i <=shooter){
             if (wave[j].alive==true){
                 i+=1 ;
             }
             j+=1 ;
-        } //choix d'un ennemi en vie au hasard
-        enemy_bullet[*enemy_bullet_compt].x = wave[j-1].x + ENEMY_WIDTH/2 ;
-        enemy_bullet[*enemy_bullet_compt].y = wave[j-1].y + ENEMY_HEIGHT ;
-        enemy_bullet[*enemy_bullet_compt].vx = 0 ;
-        enemy_bullet[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
-        enemy_bullet[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
-        enemy_bullet[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
+        } /*choix d'un ennemi en vie au hasard*/
+        (*enemy_bullet)[*enemy_bullet_compt].x = wave[j-1].x + ENEMY_WIDTH/2 ;
+        (*enemy_bullet)[*enemy_bullet_compt].y = wave[j-1].y + ENEMY_HEIGHT ;
+        if (wave[j-1].type == FAST_SHOOT){
+            (*enemy_bullet)[*enemy_bullet_compt].vy = 2 * ENEMY_BULLET_SPEED ;
+        }
+        else{
+            (*enemy_bullet)[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
+        }
+        if (wave[j-1].type == HEALER){
+            (*enemy_bullet)[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED / 3 ;
+            (*enemy_bullet)[*enemy_bullet_compt].h = 40 ;
+            (*enemy_bullet)[*enemy_bullet_compt].w = 40 ;
+            (*enemy_bullet)[*enemy_bullet_compt].mushroom = true ;
+            wave[j-1].type = CLASSIC ;
+        }
+        else{
+            (*enemy_bullet)[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
+            (*enemy_bullet)[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
+            (*enemy_bullet)[*enemy_bullet_compt].mushroom = false ;
+        }
         *enemy_bullet_compt+=1 ;
+
+        /*tir des ennemis MILITAIRE*/
+        for (Uint8 k=0 ; k<lignes*ENEMY_NUMBER ; k++){
+            if (wave[k].alive==1 && wave[k].type==MILITARY && k!=j-1){
+                if (rand()%4==0){ /*1 chance sur 4*/
+                    if (*enemy_bullet_max == *enemy_bullet_compt){
+                        *enemy_bullet_max+=1 ;
+                        Enemy_bullet* tmp = realloc(*enemy_bullet, sizeof(Enemy_bullet)**enemy_bullet_max) ;
+                        if (tmp == NULL){
+                            SDL_Log("Erreur realloc enemy_bullet");
+                            return false;
+                        }
+                        *enemy_bullet=tmp ;
+                    }
+                    (*enemy_bullet)[*enemy_bullet_compt].x = wave[k].x + ENEMY_WIDTH/2 ;
+                    (*enemy_bullet)[*enemy_bullet_compt].y = wave[k].y + ENEMY_HEIGHT ;
+                    (*enemy_bullet)[*enemy_bullet_compt].vy = ENEMY_BULLET_SPEED ;
+                    (*enemy_bullet)[*enemy_bullet_compt].h = ENEMY_BULLET_HEIGHT ;
+                    (*enemy_bullet)[*enemy_bullet_compt].w = ENEMY_BULLET_WIDTH ;
+                    (*enemy_bullet)[*enemy_bullet_compt].mushroom = false ;
+                    *enemy_bullet_compt+=1 ;
+                }
+            }
+        }
     }
-    
+    return true ; 
 }
 
 
@@ -60,6 +108,36 @@ void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_d
             if (wave[i].alive==1){
                 wave[i].x+=ENEMY_MOVE* *move_sens ;
             }
+        }
+    }
+}
+
+void update_fast_enemy(Enemy* wave, Uint8 lignes, short move_sens){
+    for (Uint8 i=0 ; i<ENEMY_NUMBER*lignes ; i++){
+        if (wave[i].type == FAST){
+            wave[i].x+=move_sens * ENEMY_MOVE;
+        }
+    }
+}
+
+/*Faire modification pour que seul un NINJA choisi au pif bouge à chaque répétition + faire gaffe à enemy_compt >1*/
+void ninja_dash(Enemy* wave, Uint8 lignes, Uint8 enemy_compt){
+    for (Uint8 k=0 ; k<lignes*ENEMY_NUMBER ; k++){
+        if (wave[k].type == NINJA){
+            int target ;
+            Uint8 j=0 ;
+            do {
+                target = rand() % enemy_compt ;
+                Uint8 i = 0 ;
+                while ( i <=target){
+                    if (wave[j].alive==true){
+                        i+=1 ;
+                    }
+                    j+=1 ;
+                } 
+            } while (target==k || wave[j-1].type==NINJA) ;
+        bool haut_bas = (bool)(rand()%2); /*Décide si le NINJA va au-dessus ou en-dessous de la target*/
+
         }
     }
 }
