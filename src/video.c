@@ -49,7 +49,7 @@ SDL_Texture* init_image(SDL_Renderer* renderer, char* src_img){
     return image ;
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture* invaders, SDL_Texture* png_player)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -61,15 +61,14 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     SDL_Rect player_rect = {
         (int)player->x, (int)player->y,
         player->w, player->h};
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderFillRect(renderer, &player_rect);
+    SDL_RenderCopy(renderer, png_player, NULL, &player_rect);
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         SDL_Rect enemy_rect = {
             (int)wave[i].x, (int)wave[i].y,
             wave[i].w, wave[i].h} ;
-        SDL_RenderFillRect(renderer, &enemy_rect) ;
+        SDL_RenderCopy(renderer, invaders, NULL ,&enemy_rect) ;
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     }

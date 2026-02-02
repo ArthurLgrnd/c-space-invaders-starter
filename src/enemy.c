@@ -64,7 +64,7 @@ void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_d
 }
 
 bool enemy_down(Enemy* wave, Uint8 lignes){
-    for (int8_t i = lignes * ENEMY_NUMBER - 1 ; i>=0 ; i-=1){
+    for (int8_t i = lignes * ENEMY_NUMBER - 1 ; i>=0 ; i-=1){ /*Parcours à l'envers pour commencer par les plus bas et stopper dès qu'un en vie est trouvé*/
         if (wave[i].alive==1){
             if (wave[i].y + wave[i].h >= SCREEN_HEIGHT - 60){
                 return true ;

@@ -62,7 +62,6 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Entity* ene
             i-=1 ;
         }
     }
-    
 }
 
 void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, Uint8* enemy_compt){

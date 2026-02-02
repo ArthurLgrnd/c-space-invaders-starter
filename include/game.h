@@ -11,7 +11,7 @@
 #define SCREEN_HEIGHT 600
 
 #define PLAYER_WIDTH 50
-#define PLAYER_HEIGHT 20
+#define PLAYER_HEIGHT 35
 #define PLAYER_SPEED 400.0f
 
 #define BULLET_WIDTH 5

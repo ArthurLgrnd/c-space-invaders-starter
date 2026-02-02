@@ -7,7 +7,7 @@
 
 #define ENEMY_NUMBER 10 
 #define ENEMY_WIDTH 40
-#define ENEMY_HEIGHT 20
+#define ENEMY_HEIGHT 32
 #define ENEMY_MOVE 20
 #define ENEMY_BORDER 20
 #define ENEMY_DROP 20 //distance descendue par cran
