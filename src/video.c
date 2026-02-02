@@ -12,26 +12,30 @@
 
 bool init(SDL_Window **window, SDL_Renderer **renderer)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0){
         SDL_Log("Erreur SDL_Init: %s", SDL_GetError());
+        return false;
+    } 
+    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG){
+        SDL_Log("Erreur IMG_Init: %s", SDL_GetError());
+        SDL_Quit();
         return false;
     }
 
     *window = SDL_CreateWindow("Space Invaders (SDL)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if (!*window)
-    {
+    if (!*window){
         SDL_Log("Erreur SDL_CreateWindow: %s", SDL_GetError());
+        IMG_Quit();
         SDL_Quit();
         return false;
     }
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-    if (!*renderer)
-    {
+    if (!*renderer){
         SDL_Log("Erreur SDL_CreateRenderer: %s", SDL_GetError());
         SDL_DestroyWindow(*window);
+        IMG_Quit();
         SDL_Quit();
         return false;
     }
@@ -39,6 +43,11 @@ bool init(SDL_Window **window, SDL_Renderer **renderer)
     return true;
 }
 
+SDL_Texture* init_image(SDL_Renderer* renderer, char* src_img){
+    SDL_Texture* image = IMG_LoadTexture(renderer, src_img) ;
+    if (image==NULL){printf("Erreur init_image %s", src_img);}
+    return image ;
+}
 
 void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart)
 {
@@ -88,5 +97,6 @@ void cleanup(SDL_Window *window, SDL_Renderer *renderer)
         SDL_DestroyRenderer(renderer);
     if (window)
         SDL_DestroyWindow(window);
+    IMG_Quit();
     SDL_Quit();
 }
