@@ -8,9 +8,6 @@
 #include "entity.h"
 
 
-
-
-
 void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bullet, bool *bullet_active)
 {
     SDL_Event event;

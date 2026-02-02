@@ -11,6 +11,7 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
         wave[i].alive = true ;
         wave[i].w = ENEMY_WIDTH ;
         wave[i].h = ENEMY_HEIGHT ;
+        wave[i].type = 0 ;
     }
     *enemy_compt=lignes*ENEMY_NUMBER ;
 }

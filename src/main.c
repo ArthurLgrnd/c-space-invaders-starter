@@ -17,7 +17,7 @@ int main(void){
     }
 
     SDL_Texture* heart = init_image(renderer, "./images/coeur.png") ;
-    SDL_Texture* invaders = init_image(renderer, "./images/invaders_1.png") ;
+    SDL_Texture* invaders = init_image(renderer, "./images/invaders_military.png") ;
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
 
 
