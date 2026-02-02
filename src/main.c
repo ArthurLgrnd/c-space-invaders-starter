@@ -2,21 +2,24 @@
 #include <SDL2/SDL_image.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "entity.h"
 #include "game.h"
 #include "enemy.h"
+#include "video.h"
     
 int main(void){
     int img_Flags = IMG_INIT_PNG;
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
-    SDL_Surface* heart = IMG_Load("./coeur.png") ;
+    SDL_Surface* heart1 = IMG_Load("./coeur.png") ;
     
 
     if (!init(&window, &renderer))
     {
         return 1;
     }
+    SDL_Texture* heart=SDL_CreateTextureFromSurface(renderer,heart1);
 
     bool running = true;
     bool win ;

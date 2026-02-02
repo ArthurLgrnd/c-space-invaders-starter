@@ -1,41 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+
 #include "game.h"
 #include "enemy.h"
 #include "entity.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 
 
-bool init(SDL_Window **window, SDL_Renderer **renderer)
-{
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        SDL_Log("Erreur SDL_Init: %s", SDL_GetError());
-        return false;
-    }
 
-    *window = SDL_CreateWindow("Space Invaders (SDL)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                               SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if (!*window)
-    {
-        SDL_Log("Erreur SDL_CreateWindow: %s", SDL_GetError());
-        SDL_Quit();
-        return false;
-    }
-
-    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-    if (!*renderer)
-    {
-        SDL_Log("Erreur SDL_CreateRenderer: %s", SDL_GetError());
-        SDL_DestroyWindow(*window);
-        SDL_Quit();
-        return false;
-    }
-
-    return true;
-}
 
 void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bullet, bool *bullet_active)
 {
@@ -117,55 +91,3 @@ void damage_player(Entity* enemy_bullet, Uint8* enemy_bullet_compt, Entity playe
 }
 
 
-
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Surface* heart)
-{
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Rect player_rect = {
-        (int)player->x, (int)player->y,
-        player->w, player->h};
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderFillRect(renderer, &player_rect);
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
-    for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
-        SDL_Rect enemy_rect = {
-            (int)wave[i].x, (int)wave[i].y,
-            wave[i].w, wave[i].h} ;
-        SDL_RenderFillRect(renderer, &enemy_rect) ;
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
-    }
-
-    if (bullet_active)
-    {
-        SDL_Rect bullet_rect = {
-            (int)bullet->x, (int)bullet->y,
-            bullet->w, bullet->h};
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(renderer, &bullet_rect);
-    }
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-    for (int i=0 ; i<*enemy_bullet_compt ; i++){
-        SDL_Rect enemy_bullet_rect = {
-            (int)enemy_bullet[i].x, (int)enemy_bullet[i].y,
-            enemy_bullet[i].w, enemy_bullet[i].h};
-        SDL_RenderFillRect(renderer, &enemy_bullet_rect);
-    }
-    SDL_Texture* heart1=SDL_CreateTextureFromSurface(renderer,heart);
-    SDL_Rect rect = {50,10,50,50};
-    SDL_RenderCopy(renderer,heart1,NULL,&rect);
-    SDL_RenderPresent(renderer);
-    SDL_DestroyTexture(heart1) ;
-}
-
-void cleanup(SDL_Window *window, SDL_Renderer *renderer)
-{
-    if (renderer)
-        SDL_DestroyRenderer(renderer);
-    if (window)
-        SDL_DestroyWindow(window);
-    SDL_Quit();
-}

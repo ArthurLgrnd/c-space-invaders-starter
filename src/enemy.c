@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include <stdbool.h>
 #include "entity.h"
 #include "game.h"

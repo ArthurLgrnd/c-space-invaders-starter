@@ -1,6 +1,10 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include <stdbool.h>
+#include <SDL2/SDL.h>
+#include "entity.h"
+
 #define ENEMY_NUMBER 10 
 #define ENEMY_WIDTH 40
 #define ENEMY_HEIGHT 20
