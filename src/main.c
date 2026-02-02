@@ -17,7 +17,8 @@ int main(void){
     }
 
     SDL_Texture* heart = init_image(renderer, "./images/coeur.png") ;
-    SDL_Texture* invaders = init_image(renderer, "./images/invaders_military.png") ;
+    SDL_Texture* invaders[9] = {NULL} ;
+    init_invaders(invaders, renderer) ;
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
 
 
@@ -82,7 +83,7 @@ int main(void){
             }
             new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player);
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders[0], png_player);
         
         if (lives <= 0){
            win = false ;

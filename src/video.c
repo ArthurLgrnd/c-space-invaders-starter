@@ -45,8 +45,20 @@ bool init(SDL_Window **window, SDL_Renderer **renderer)
 
 SDL_Texture* init_image(SDL_Renderer* renderer, char* src_img){
     SDL_Texture* image = IMG_LoadTexture(renderer, src_img) ;
-    if (image==NULL){printf("Erreur init_image %s", src_img);}
+    if (image==NULL){printf("Erreur init_image %s \n", src_img);}
     return image ;
+}
+
+void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
+    invaders[0]=init_image(renderer, "./images/invaders_classic.png");
+    invaders[1]=init_image(renderer, "./images/invaders_shield.png");
+    invaders[2]=init_image(renderer, "./images/invaders_br_shield.png");
+    invaders[3]=init_image(renderer, "./images/invaders_no_shield.png");
+    invaders[4]=init_image(renderer, "./images/invaders_ninja.png");
+    invaders[5]=init_image(renderer, "./images/invaders_fast.png");
+    invaders[6]=init_image(renderer, "./images/invaders_fast_shoot.png");
+    invaders[7]=init_image(renderer, "./images/invaders_military.png");
+    invaders[8]=init_image(renderer, "./images/invaders_healer.png");
 }
 
 void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture* invaders, SDL_Texture* png_player)
@@ -65,12 +77,12 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+        if (wave[i].alive){
         SDL_Rect enemy_rect = {
             (int)wave[i].x, (int)wave[i].y,
             wave[i].w, wave[i].h} ;
         SDL_RenderCopy(renderer, invaders, NULL ,&enemy_rect) ;
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
+        }
     }
 
     if (bullet_active)

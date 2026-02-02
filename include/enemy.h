@@ -22,8 +22,8 @@ typedef enum {
     BR_SHIELD=2,
     NO_SHIELD=3,
     NINJA=4, /*Rapide à descendre*/
-    FAST_M=5, /*Rapide sur les côtés*/
-    MORE_SHOOT=6,
+    FAST=5, /*Rapide sur les côtés*/
+    FAST_SHOOT=6,
     MILITARY=7, /*Tir plus souvent*/
     HEALER=8 
 } Enemy_types ;
