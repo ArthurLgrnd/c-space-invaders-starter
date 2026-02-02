@@ -61,7 +61,7 @@ void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
     invaders[8]=init_image(renderer, "./images/invaders_healer.png");
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture* invaders, SDL_Texture* png_player)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -78,10 +78,10 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
     for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
         if (wave[i].alive){
-        SDL_Rect enemy_rect = {
-            (int)wave[i].x, (int)wave[i].y,
-            wave[i].w, wave[i].h} ;
-        SDL_RenderCopy(renderer, invaders, NULL ,&enemy_rect) ;
+            SDL_Rect enemy_rect = {
+                (int)wave[i].x, (int)wave[i].y,
+                wave[i].w, wave[i].h} ;
+            SDL_RenderCopy(renderer, invaders[wave[i].type], NULL ,&enemy_rect) ;
         }
     }
 
