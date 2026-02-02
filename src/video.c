@@ -49,10 +49,14 @@ SDL_Texture* init_image(SDL_Renderer* renderer, char* src_img){
     return image ;
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Entity* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
+    SDL_Rect hud = {3,3,SCREEN_WIDTH-6,60};
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderDrawRect(renderer, &hud);
 
     SDL_Rect player_rect = {
         (int)player->x, (int)player->y,
@@ -85,8 +89,10 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
             enemy_bullet[i].w, enemy_bullet[i].h};
         SDL_RenderFillRect(renderer, &enemy_bullet_rect);
     }
-    SDL_Rect rect = {50,10,50,50};
-    SDL_RenderCopy(renderer,heart,NULL,&rect);
+    for (int i=0 ; i<lives ; i++){
+    SDL_Rect heart_size = {500 + i*60, 10, 50, 50};
+    SDL_RenderCopy(renderer,heart,NULL,&heart_size);
+    }
     SDL_RenderPresent(renderer);
 }
 

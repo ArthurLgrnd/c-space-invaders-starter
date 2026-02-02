@@ -16,11 +16,11 @@ int main(void){
         return 1;
     }
 
-    SDL_Texture* heart = init_image(renderer, "./coeur.png") ;
+    SDL_Texture* heart = init_image(renderer, "./images/coeur.png") ;
 
     bool running = true;
     bool win ;
-    Uint8 lives = 3 ;
+    Uint8 lives = 5 ;
     Uint32 last_ticks = SDL_GetTicks();
 
     Entity player = {
@@ -79,7 +79,7 @@ int main(void){
             }
             new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, enemy_bullet);
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart);
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives);
         
         if (lives <= 0){
            win = false ;
