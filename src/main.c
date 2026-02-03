@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,9 +22,11 @@ int main(void){
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
     SDL_Texture* mushroom = init_image(renderer, "./images/mushroom.png") ;
 
+    TTF_Font* micro5= TTF_OpenFont("./Micro5-Regular.ttf", 80) ;
+
     bool running = true;
     bool win = false ;
-    Uint8 lives = 5 ;
+    Uint8 lives = 3 ;
     Uint32 last_ticks = SDL_GetTicks();
 
     Entity player = {
@@ -92,7 +95,7 @@ int main(void){
                 break ;
             }
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom);
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5);
         
         if (lives <= 0){
            win = false ;

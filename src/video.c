@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "entity.h"
 #include "enemy.h"
@@ -21,11 +22,18 @@ bool init(SDL_Window **window, SDL_Renderer **renderer)
         SDL_Quit();
         return false;
     }
+    if(TTF_Init()!=0){
+        SDL_Log("Erreur TTF_Init: %s", SDL_GetError());
+        IMG_Quit();
+        SDL_Quit();
+        return false;
+    }
 
     *window = SDL_CreateWindow("Space Invaders (SDL)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (!*window){
         SDL_Log("Erreur SDL_CreateWindow: %s", SDL_GetError());
+        TTF_Quit();
         IMG_Quit();
         SDL_Quit();
         return false;
@@ -35,6 +43,7 @@ bool init(SDL_Window **window, SDL_Renderer **renderer)
     if (!*renderer){
         SDL_Log("Erreur SDL_CreateRenderer: %s", SDL_GetError());
         SDL_DestroyWindow(*window);
+        TTF_Quit();
         IMG_Quit();
         SDL_Quit();
         return false;
@@ -61,7 +70,16 @@ void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
     invaders[8]=init_image(renderer, "./images/invaders_healer.png");
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom)
+void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* text, int x, int y){
+    SDL_Surface* surface =  TTF_RenderText_Solid(font, text, color) ;
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Rect size = {x, y, surface->w, surface->h};
+    SDL_RenderCopy(renderer,texture,NULL,&size);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+}
+
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -106,9 +124,19 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
             SDL_RenderFillRect(renderer, &enemy_bullet_rect);
         }
     }
-    for (int i=0 ; i<lives ; i++){
-    SDL_Rect heart_size = {500 + i*60, 10, 50, 50};
-    SDL_RenderCopy(renderer,heart,NULL,&heart_size);
+    if (lives<6){
+        for (int i=0 ; i<lives ; i++){
+        SDL_Rect heart_size = {500 + i*60, 10, 50, 50};
+        SDL_RenderCopy(renderer,heart,NULL,&heart_size);
+        }
+    }
+    else{
+        SDL_Rect heart_size = {560, 10, 50, 50};
+        SDL_RenderCopy(renderer,heart,NULL,&heart_size);
+        SDL_Color rouge = {255,0,0,255} ;
+        char text_lives[10] ;
+        snprintf(text_lives, sizeof(text_lives), "x%d", lives);
+        draw_text(renderer, micro5, rouge, text_lives, 620, -8) ;
     }
     SDL_RenderPresent(renderer);
 }
@@ -120,6 +148,7 @@ void cleanup(SDL_Window *window, SDL_Renderer *renderer)
         SDL_DestroyRenderer(renderer);
     if (window)
         SDL_DestroyWindow(window);
+    TTF_Quit();    
     IMG_Quit();
     SDL_Quit();
 }
