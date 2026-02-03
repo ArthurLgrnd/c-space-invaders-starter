@@ -21,7 +21,7 @@ typedef enum {
     SHIELD=1, /*ok*/
     BR_SHIELD=2, /*ok*/
     NO_SHIELD=3, /*ok*/
-    NINJA=4, /*Rapide à descendre*/
+    NINJA=4, /*Rapide à descendre*/   /*~~ok, juste voir si faire en sorte que target ne soit jamais un ninja(faire une 2ème boucle)*/
     FAST=5, /*Rapide sur les côtés*/   /*~~ok*/
     FAST_SHOOT=6, /*ok*/
     MILITARY=7, /*Tir plus souvent*/   /*ok*/

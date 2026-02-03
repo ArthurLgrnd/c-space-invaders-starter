@@ -43,7 +43,7 @@ int main(void){
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
-    Uint8 lignes = 3 ;
+    Uint8 lignes = 2 ;
     Enemy* wave = malloc (sizeof(Enemy)*lignes*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
 
