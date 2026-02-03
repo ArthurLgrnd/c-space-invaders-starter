@@ -15,8 +15,6 @@ void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_compt){
         wave[i].type = HEALER ;
     }
     *enemy_compt=lignes*ENEMY_NUMBER ;
-    wave[10].type = NINJA ;
-    wave[5].type = NINJA ;
 }
 
 

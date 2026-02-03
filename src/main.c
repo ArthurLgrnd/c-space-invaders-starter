@@ -43,7 +43,7 @@ int main(void){
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
-    Uint8 lignes = 2 ;
+    Uint8 lignes = 1 ;
     Enemy* wave = malloc (sizeof(Enemy)*lignes*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
 
@@ -99,8 +99,9 @@ int main(void){
            break ;
         }
         if (enemy_compt <= 0){
-            win = true ; 
-            break ;
+            new_wave(wave, lignes, &enemy_compt) ;
+            move_sens = 1 ;
+            last_move_drop = true ;
         }
         
         if (enemy_down(wave,lignes)){
@@ -114,6 +115,11 @@ int main(void){
     free(wave);
     free(enemy_bullet);
     SDL_DestroyTexture(heart);
+    SDL_DestroyTexture(png_player);
+    SDL_DestroyTexture(mushroom);
+    for (Uint8 i=0 ; i<9 ; i++){
+        SDL_DestroyTexture(invaders[i]) ;
+    }
     cleanup(window, renderer);
     return 0;
 }
