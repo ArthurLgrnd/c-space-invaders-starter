@@ -27,6 +27,7 @@ int main(void){
     bool running = true;
     bool win = false ;
     Uint8 lives = 3 ;
+    Uint32 score = 0 ;
     Uint32 last_ticks = SDL_GetTicks();
 
     Entity player = {
@@ -73,7 +74,7 @@ int main(void){
         update_pos(&player, &bullet, &bullet_active, enemy_bullet, &enemy_bullet_compt, dt);
 
         if (bullet_active){
-            kill_enemy(&bullet, &bullet_active, wave, lignes, &enemy_compt);
+            kill_enemy(&bullet, &bullet_active, wave, lignes, &enemy_compt, &score);
         }
 
         damage_player(enemy_bullet, &enemy_bullet_compt, player, &lives) ;
@@ -95,7 +96,7 @@ int main(void){
                 break ;
             }
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5);
+        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
         
         if (lives <= 0){
            win = false ;
@@ -104,8 +105,7 @@ int main(void){
         if (enemy_compt <= 0){
             new_wave(wave, lignes, &enemy_compt) ;
             move_sens = 1 ;
-            last_move_drop = true ;
-        }
+            last_move_drop = true ;        }
         
         if (enemy_down(wave,lignes)){
             win = false ;

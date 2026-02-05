@@ -17,15 +17,15 @@
 #define ENEMY_BULLET_SPEED 600.0f
 
 typedef enum {
-    CLASSIC=0, /*ok*/
+    CLASSIC=0, /*ok 10*/
     SHIELD=1, /*ok*/
     BR_SHIELD=2, /*ok*/
-    NO_SHIELD=3, /*ok*/
-    NINJA=4, /*Rapide à descendre*/   /*~~ok, juste voir si faire en sorte que target ne soit jamais un ninja(faire une 2ème boucle)*/
-    FAST=5, /*Rapide sur les côtés*/   /*~~ok*/
-    FAST_SHOOT=6, /*ok*/
-    MILITARY=7, /*Tir plus souvent*/   /*ok*/
-    HEALER=8 /*ok*/
+    NO_SHIELD=3, /*ok 30*/
+    NINJA=4, /*Rapide à descendre*/   /*~~ok 50, juste voir si faire en sorte que target ne soit jamais un ninja(faire une 2ème boucle)*/
+    FAST=5, /*Rapide sur les côtés*/   /*~~ok 30*/
+    FAST_SHOOT=6, /*ok 30*/
+    MILITARY=7, /*Tir plus souvent*/   /*ok 30*/
+    HEALER=8 /*ok 10*/
 } Enemy_types ;
 
 typedef struct

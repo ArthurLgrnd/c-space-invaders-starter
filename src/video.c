@@ -79,7 +79,7 @@ void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* te
     SDL_FreeSurface(surface);
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5, Uint32 score)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -138,6 +138,10 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
         snprintf(text_lives, sizeof(text_lives), "x%d", lives);
         draw_text(renderer, micro5, rouge, text_lives, 620, -8) ;
     }
+    SDL_Color blanc = {255,255,255,255} ;
+    char text_score[10];
+    snprintf(text_score,sizeof(text_score), "%05d", score);
+    draw_text(renderer, micro5, blanc, text_score, 50, -8);
     SDL_RenderPresent(renderer);
 }
 
