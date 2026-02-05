@@ -24,6 +24,8 @@ void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt){
         wave[i].type = CLASSIC ;
     }
 
+    Uint8 repet = 0 ;
+    Uint8 random;
     switch(round->number){
         case 2:
             wave[rand()%round->total_enemy].type = HEALER;
@@ -35,6 +37,62 @@ void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt){
         case 4:
             for (Uint8 i=ENEMY_NUMBER; i < 2*ENEMY_NUMBER ; i+=2){wave[i].type=SHIELD;}
             for (Uint8 i=2*ENEMY_NUMBER+1; i < 3*ENEMY_NUMBER ; i+=2){wave[i].type=SHIELD;}
+            break ;
+        case 6:
+            wave[1].type=MILITARY;
+            wave[ENEMY_NUMBER-2].type=MILITARY;
+            while(repet<4){
+                do{ 
+                    random=ENEMY_NUMBER + rand() % (2*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = SHIELD;
+                repet += 1 ;
+            }
+            do{ 
+                random=rand() % round->total_enemy;
+            } while (wave[random].type != CLASSIC) ;
+            wave[random].type = HEALER;
+            break ;
+        case 7:
+            wave[0].type=MILITARY;
+            wave[3].type=MILITARY;
+            wave[ENEMY_NUMBER-1].type=MILITARY;
+            wave[ENEMY_NUMBER-4].type=MILITARY;
+
+            while(repet<6){
+                do{ 
+                    random=ENEMY_NUMBER + rand() % (2*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = SHIELD;
+                repet += 1 ;
+            }
+            break ;
+        case 8:
+            wave[1].type = FAST_SHOOT;
+            wave[ENEMY_NUMBER-2].type = FAST_SHOOT;
+            wave[(int)(ENEMY_NUMBER/2)].type = FAST_SHOOT;
+            while(repet<4){
+                do{ 
+                    random=ENEMY_NUMBER + rand() % (2*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = SHIELD;
+                repet += 1 ;
+            }
+            break ;
+        case 9:
+            wave[1].type=FAST_SHOOT;
+            wave[ENEMY_NUMBER-2].type=FAST_SHOOT;
+            wave[3].type=MILITARY;
+            wave[ENEMY_NUMBER-4].type=MILITARY;
+            wave[ENEMY_NUMBER].type=MILITARY;
+            wave[2*ENEMY_NUMBER-1].type=MILITARY;
+            wave[ENEMY_NUMBER+2].type=FAST_SHOOT;
+            wave[2*ENEMY_NUMBER-3].type=FAST_SHOOT;
+            wave[2*ENEMY_NUMBER].type=SHIELD;
+            wave[3*ENEMY_NUMBER-1].type=SHIELD;
+            wave[2*ENEMY_NUMBER+2].type=SHIELD;
+            wave[3*ENEMY_NUMBER-3].type=SHIELD;
+            
     }
 
 

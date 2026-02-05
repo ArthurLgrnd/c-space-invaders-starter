@@ -47,7 +47,7 @@ int main(void){
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
-    Round round = {3, 2*ENEMY_NUMBER} ;
+    Round round = {0, 2*ENEMY_NUMBER} ;
     Enemy* wave = malloc (sizeof(Enemy)*4*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
 
