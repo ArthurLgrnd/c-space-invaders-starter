@@ -61,13 +61,13 @@ SDL_Texture* init_image(SDL_Renderer* renderer, char* src_img){
 void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
     invaders[0]=init_image(renderer, "./images/invaders_classic.png");
     invaders[1]=init_image(renderer, "./images/invaders_shield.png");
-    invaders[2]=init_image(renderer, "./images/invaders_br_shield.png");
-    invaders[3]=init_image(renderer, "./images/invaders_no_shield.png");
+    invaders[2]=init_image(renderer, "./images/invaders_military.png");
+    invaders[3]=init_image(renderer, "./images/invaders_fast_shoot.png");
     invaders[4]=init_image(renderer, "./images/invaders_ninja.png");
     invaders[5]=init_image(renderer, "./images/invaders_fast.png");
-    invaders[6]=init_image(renderer, "./images/invaders_fast_shoot.png");
-    invaders[7]=init_image(renderer, "./images/invaders_military.png");
-    invaders[8]=init_image(renderer, "./images/invaders_healer.png");
+    invaders[6]=init_image(renderer, "./images/invaders_healer.png");
+    invaders[7]=init_image(renderer, "./images/invaders_br_shield.png");
+    invaders[8]=init_image(renderer, "./images/invaders_no_shield.png");
 }
 
 void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* text, int x, int y){
@@ -94,7 +94,7 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     SDL_RenderCopy(renderer, png_player, NULL, &player_rect);
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
-    for (int i=0 ; i<round.lignes*ENEMY_NUMBER ; i++){
+    for (int i=0 ; i<round.total_enemy ; i++){
         if (wave[i].alive){
             SDL_Rect enemy_rect = {
                 (int)wave[i].x, (int)wave[i].y,

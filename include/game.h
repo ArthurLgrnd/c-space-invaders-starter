@@ -18,7 +18,7 @@
 #define BULLET_SPEED 600.0f
 
 typedef struct {
-    Uint8 number, lignes ;
+    Uint8 number, total_enemy ;
 } Round ;
 
 #include "enemy.h"

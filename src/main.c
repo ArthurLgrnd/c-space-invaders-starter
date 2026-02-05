@@ -11,7 +11,7 @@
     
 int main(void){
     SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;    
+    SDL_Renderer *renderer = NULL;
     if (!init(&window, &renderer))
     {
         return 1;
@@ -47,8 +47,8 @@ int main(void){
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
-    Round round = {1,1} ;
-    Enemy* wave = malloc (sizeof(Enemy)*round.lignes*ENEMY_NUMBER) ;
+    Round round = {3, 2*ENEMY_NUMBER} ;
+    Enemy* wave = malloc (sizeof(Enemy)*4*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
 
     Uint8 enemy_bullet_compt = 0 ;
@@ -57,7 +57,7 @@ int main(void){
     float enemy_bullet_time = 0.8 ;
     Uint32 last_bullet = last_ticks ;
 
-    new_wave(wave, round, &enemy_compt) ;
+    new_wave(wave, &round, &enemy_compt) ;
 
     while (running)
     {
@@ -103,7 +103,7 @@ int main(void){
            break ;
         }
         if (enemy_compt <= 0){
-            new_wave(wave, round, &enemy_compt) ;
+            new_wave(wave, &round, &enemy_compt) ;
             move_sens = 1 ;
             last_move_drop = true ;        }
         
