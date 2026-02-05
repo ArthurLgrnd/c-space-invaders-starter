@@ -79,7 +79,7 @@ void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* te
     SDL_FreeSurface(surface);
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Uint8 lignes, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5, Uint32 score)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Round round, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5, Uint32 score)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -94,7 +94,7 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
     SDL_RenderCopy(renderer, png_player, NULL, &player_rect);
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255) ;
-    for (int i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+    for (int i=0 ; i<round.lignes*ENEMY_NUMBER ; i++){
         if (wave[i].alive){
             SDL_Rect enemy_rect = {
                 (int)wave[i].x, (int)wave[i].y,

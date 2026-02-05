@@ -44,13 +44,15 @@ typedef struct
     bool mushroom;
 } Enemy_bullet;
 
+#include "game.h"
 
-void new_wave(Enemy* wave, Uint8 lignes, Uint8* enemy_number) ;
-bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Uint8* enemy_bullet_max, Enemy_bullet** enemy_bullet, Uint8 lignes) ;
-void update_enemy(Enemy* wave, Uint8 lignes, short* move_sens, bool* last_move_drop, float* move_time) ;
-void update_fast_enemy(Enemy* wave, Uint8 lignes, short move_sens);
-void ninja_dash(Enemy* wave, Uint8 lignes, Uint8 enemy_compt) ;
-bool enemy_down(Enemy* wave, Uint8 lignes) ;
+
+void new_wave(Enemy* wave, Round round, Uint8* enemy_number) ;
+bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Uint8* enemy_bullet_max, Enemy_bullet** enemy_bullet, Round round) ;
+void update_enemy(Enemy* wave, Round round, short* move_sens, bool* last_move_drop, float* move_time) ;
+void update_fast_enemy(Enemy* wave, Round round, short move_sens);
+void ninja_dash(Enemy* wave, Round round, Uint8 enemy_compt) ;
+bool enemy_down(Enemy* wave, Round round) ;
 
 
 

@@ -61,8 +61,8 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bulle
     }
 }
 
-void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Uint8 lignes, Uint8* enemy_compt, Uint32* score){
-    for (Uint8 i=0 ; i<lignes*ENEMY_NUMBER ; i++){
+void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Round round, Uint8* enemy_compt, Uint32* score){
+    for (Uint8 i=0 ; i<round.lignes*ENEMY_NUMBER ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
             if (wave[i].type == SHIELD){
                 wave[i].type = BR_SHIELD ;

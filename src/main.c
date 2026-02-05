@@ -47,8 +47,8 @@ int main(void){
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
-    Uint8 lignes = 1 ;
-    Enemy* wave = malloc (sizeof(Enemy)*lignes*ENEMY_NUMBER) ;
+    Round round = {1,1} ;
+    Enemy* wave = malloc (sizeof(Enemy)*round.lignes*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
 
     Uint8 enemy_bullet_compt = 0 ;
@@ -57,7 +57,7 @@ int main(void){
     float enemy_bullet_time = 0.8 ;
     Uint32 last_bullet = last_ticks ;
 
-    new_wave(wave, lignes, &enemy_compt) ;
+    new_wave(wave, round, &enemy_compt) ;
 
     while (running)
     {
@@ -74,7 +74,7 @@ int main(void){
         update_pos(&player, &bullet, &bullet_active, enemy_bullet, &enemy_bullet_compt, dt);
 
         if (bullet_active){
-            kill_enemy(&bullet, &bullet_active, wave, lignes, &enemy_compt, &score);
+            kill_enemy(&bullet, &bullet_active, wave, round, &enemy_compt, &score);
         }
 
         damage_player(enemy_bullet, &enemy_bullet_compt, player, &lives) ;
@@ -82,32 +82,32 @@ int main(void){
         if ((ticks - last_move)/1000.0f > move_time){
             last_move+= move_time*1000.0f ;
             last_half_move = last_move ;
-            update_enemy(wave, lignes, &move_sens, &last_move_drop, &move_time) ;
+            update_enemy(wave, round, &move_sens, &last_move_drop, &move_time) ;
         }
         else if ((ticks - last_half_move)/1000.0f > move_time/2.0f){
             last_half_move+=move_time*500.0f +1 ; /*+1 pour être certain de ne pas avoir deux mouvements fast avant un classique en cas de mauvais arrondis*/
-            update_fast_enemy(wave, lignes, move_sens);
-            ninja_dash(wave, lignes, enemy_compt) ;
+            update_fast_enemy(wave, round, move_sens);
+            ninja_dash(wave, round, enemy_compt) ;
         }
 
         if ((ticks-last_bullet)/1000.0f > enemy_bullet_time){
             last_bullet+=enemy_bullet_time*1000.0f;
-            if(!new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, &enemy_bullet_max, &enemy_bullet, lignes)){
+            if(!new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, &enemy_bullet_max, &enemy_bullet, round)){
                 break ;
             }
         }
-        render(renderer, &player, &bullet, wave, bullet_active, lignes, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
+        render(renderer, &player, &bullet, wave, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
         
         if (lives <= 0){
            win = false ;
            break ;
         }
         if (enemy_compt <= 0){
-            new_wave(wave, lignes, &enemy_compt) ;
+            new_wave(wave, round, &enemy_compt) ;
             move_sens = 1 ;
             last_move_drop = true ;        }
         
-        if (enemy_down(wave,lignes)){
+        if (enemy_down(wave,round)){
             win = false ;
             break ;
         }
