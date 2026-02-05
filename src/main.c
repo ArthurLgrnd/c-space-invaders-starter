@@ -105,7 +105,15 @@ int main(void){
         if (enemy_compt <= 0){
             new_wave(wave, &round, &enemy_compt) ;
             move_sens = 1 ;
-            last_move_drop = true ;        }
+            last_move_drop = true;
+            enemy_bullet_compt = 0;
+            render(renderer, &player, &bullet, wave, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
+            while(last_ticks+2000>SDL_GetTicks()){}
+            last_ticks = SDL_GetTicks();
+            last_move = last_ticks ;
+            last_half_move = last_ticks ;
+            last_bullet = last_ticks ;
+        }
         
         if (enemy_down(wave,round)){
             win = false ;
