@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "entity.h"
 #include "game.h"
 #include "enemy.h"
@@ -23,6 +24,8 @@ int main(void){
     SDL_Texture* mushroom = init_image(renderer, "./images/mushroom.png") ;
 
     TTF_Font* micro5= TTF_OpenFont("./Micro5-Regular.ttf", 80) ;
+
+    srand(time(NULL)) ;
 
     bool running = true;
     bool win = false ;
@@ -54,8 +57,10 @@ int main(void){
 
     Uint8 enemy_bullet_compt = 0 ;
     Enemy_bullet* enemy_bullet = malloc(sizeof(Enemy_bullet)*2);
-    Uint8 enemy_bullet_max = 2 ; // maximum de tirs ennemis stockables pour le moment
-    float enemy_bullet_time = 0.8 ;
+    Uint8 enemy_bullet_max = 2 ; /*maximum de tirs ennemis stockables pour le moment*/
+    float enemy_bullet_time = 0.8 ; /*Temps moyen entre chaque tir ennemi*/
+    float var_enemy_bullet_time = (rand()/(float)(RAND_MAX) * 2 * enemy_bullet_time) ;
+    printf("%f", var_enemy_bullet_time);
     Uint32 last_bullet = last_ticks ;
 
     new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
@@ -91,8 +96,9 @@ int main(void){
             ninja_dash(wave, round, enemy_compt) ;
         }
 
-        if ((ticks-last_bullet)/1000.0f > enemy_bullet_time){
-            last_bullet+=enemy_bullet_time*1000.0f;
+        if ((ticks-last_bullet)/1000.0f > var_enemy_bullet_time){
+            last_bullet+=var_enemy_bullet_time*1000.0f;
+            var_enemy_bullet_time = (rand()/(float)(RAND_MAX) * 2 * enemy_bullet_time) * (2-(float)(enemy_compt)/round.total_enemy) ; /*Augementation du temps entre chaque shoot quand le nombre d'ennemis diminue pour éviter que les derniers ennemis tirent trop fréquemment*/
             if(!new_enemy_bullet(wave, enemy_compt, &enemy_bullet_compt, &enemy_bullet_max, &enemy_bullet, round)){
                 break ;
             }
