@@ -43,7 +43,8 @@ int main(void){
     bool bullet_active = false;
     Uint32 last_move = last_ticks ;
     Uint32 last_half_move = last_ticks ; /*temps pour les mouvements supplémentaires des ennemis FAST et les mouvements NINJA*/
-    float move_time = 1 ;
+    float round_move_time = 1 ; /*Temps entre chaque déplacement d'ennemis qui évolue avec les nouveau round*/  
+    float var_move_time = round_move_time ; /*Temps entre chaque déplacement d'ennemis qui évolue au sein du d'un round*/
     short move_sens = 1 ;
     bool last_move_drop = true ;
 
@@ -57,7 +58,7 @@ int main(void){
     float enemy_bullet_time = 0.8 ;
     Uint32 last_bullet = last_ticks ;
 
-    new_wave(wave, &round, &enemy_compt) ;
+    new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
 
     while (running)
     {
@@ -79,13 +80,13 @@ int main(void){
 
         damage_player(enemy_bullet, &enemy_bullet_compt, player, &lives) ;
 
-        if ((ticks - last_move)/1000.0f > move_time){
-            last_move+= move_time*1000.0f ;
+        if ((ticks - last_move)/1000.0f > var_move_time){
+            last_move+= var_move_time*1000.0f ;
             last_half_move = last_move ;
-            update_enemy(wave, round, &move_sens, &last_move_drop, &move_time) ;
+            update_enemy(wave, round, &move_sens, &last_move_drop, &var_move_time) ;
         }
-        else if ((ticks - last_half_move)/1000.0f > move_time/2.0f){
-            last_half_move+=move_time*500.0f +1 ; /*+1 pour être certain de ne pas avoir deux mouvements fast avant un classique en cas de mauvais arrondis*/
+        else if ((ticks - last_half_move)/1000.0f > var_move_time/2.0f){
+            last_half_move+=var_move_time*500.0f +1 ; /*+1 pour être certain de ne pas avoir deux mouvements fast avant un classique en cas de mauvais arrondis*/
             update_fast_enemy(wave, round, move_sens);
             ninja_dash(wave, round, enemy_compt) ;
         }
@@ -103,12 +104,12 @@ int main(void){
            break ;
         }
         if (enemy_compt <= 0){
-            new_wave(wave, &round, &enemy_compt) ;
+            new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
             move_sens = 1 ;
             last_move_drop = true;
             enemy_bullet_compt = 0;
             render(renderer, &player, &bullet, wave, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
-            while(last_ticks+2000>SDL_GetTicks()){}
+            while(last_ticks+1000>SDL_GetTicks()){}
             last_ticks = SDL_GetTicks();
             last_move = last_ticks ;
             last_half_move = last_ticks ;

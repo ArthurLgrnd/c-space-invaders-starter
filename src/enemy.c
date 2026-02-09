@@ -8,8 +8,10 @@
 
 
 
-void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt){
+void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_time, float* var_move_time){
     round->number+=1;
+    if (round->number<=15){*round_move_time*=0.955;} /*Facteur permettant d'avoir une division par deux au bout de 15 rounds*/
+    *var_move_time = *round_move_time ;
     if (round->number % 5 ==0){round->total_enemy = 1 ;}
     else if (round->number==1){round->total_enemy = 2 * ENEMY_NUMBER ;}
     else if (round->number<=9){round->total_enemy = 3 * ENEMY_NUMBER ;}
