@@ -81,8 +81,7 @@ void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Round round, U
                 wave[i].x = -10-ENEMY_WIDTH ;
                 wave[i].alive = false ;
                 *enemy_compt-=1 ;
-                if (wave[i].type == NINJA){*score+=50;}
-                else if (wave[i].type == CLASSIC || wave[i].type == HEALER){*score+=10;}
+                if (wave[i].type == CLASSIC || wave[i].type == HEALER){*score+=10;}
                 else{*score+=30;}
             }
             *bullet_active = false ;

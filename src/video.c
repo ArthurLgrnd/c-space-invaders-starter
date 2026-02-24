@@ -63,11 +63,10 @@ void init_invaders(SDL_Texture** invaders, SDL_Renderer* renderer){
     invaders[1]=init_image(renderer, "./images/invaders_shield.png");
     invaders[2]=init_image(renderer, "./images/invaders_military.png");
     invaders[3]=init_image(renderer, "./images/invaders_fast_shoot.png");
-    invaders[4]=init_image(renderer, "./images/invaders_ninja.png");
-    invaders[5]=init_image(renderer, "./images/invaders_fast.png");
-    invaders[6]=init_image(renderer, "./images/invaders_healer.png");
-    invaders[7]=init_image(renderer, "./images/invaders_br_shield.png");
-    invaders[8]=init_image(renderer, "./images/invaders_no_shield.png");
+    invaders[4]=init_image(renderer, "./images/invaders_fast.png");
+    invaders[5]=init_image(renderer, "./images/invaders_healer.png");
+    invaders[6]=init_image(renderer, "./images/invaders_br_shield.png");
+    invaders[7]=init_image(renderer, "./images/invaders_no_shield.png");
 }
 
 void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* text, int x, int y){

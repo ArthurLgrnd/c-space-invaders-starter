@@ -18,7 +18,7 @@ int main(void){
         return 1;
     }
     SDL_Texture* heart = init_image(renderer, "./images/coeur.png") ;
-    SDL_Texture* invaders[9] = {NULL} ;
+    SDL_Texture* invaders[8] = {NULL} ;
     init_invaders(invaders, renderer) ;
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
     SDL_Texture* mushroom = init_image(renderer, "./images/mushroom.png") ;
@@ -46,7 +46,7 @@ int main(void){
 
     bool bullet_active = false;
     Uint32 last_move = last_ticks ;
-    Uint32 last_half_move = last_ticks ; /*temps pour les mouvements supplémentaires des ennemis FAST et les mouvements NINJA*/
+    Uint32 last_half_move = last_ticks ; /*temps pour les mouvements supplémentaires des ennemis FAST*/
     float round_move_time = 1.3 ; /*Temps entre chaque déplacement d'ennemis qui évolue avec les nouveau round*/  
     float var_move_time = round_move_time ; /*Temps entre chaque déplacement d'ennemis qui évolue au sein du d'un round*/
     short move_sens = 1 ;
@@ -109,7 +109,6 @@ int main(void){
         else if ((ticks - last_half_move)/1000.0f > var_move_time/2.0f){
             last_half_move+=var_move_time*500.0f +1 ; /*+1 pour être certain de ne pas avoir deux mouvements fast avant un classique en cas de mauvais arrondis*/
             update_fast_enemy(wave, round, &fast_move_sens, &fast_last_move_drop);
-            ninja_dash(wave, round, enemy_compt) ;
         }
 
         if ((ticks-last_bullet)/1000.0f > var_enemy_bullet_time){
@@ -163,7 +162,7 @@ int main(void){
     SDL_DestroyTexture(png_player);
     SDL_DestroyTexture(mushroom);
     SDL_DestroyTexture(png_bonus);
-    for (Uint8 i=0 ; i<9 ; i++){
+    for (Uint8 i=0 ; i<8 ; i++){
         SDL_DestroyTexture(invaders[i]) ;
     }
     cleanup(window, renderer);
