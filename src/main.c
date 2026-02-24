@@ -29,7 +29,6 @@ int main(void){
     srand(time(NULL)) ;
 
     bool running = true;
-    bool win = false ;
     Uint8 lives = 3 ;
     Uint32 score = 0 ;
     Uint32 last_ticks = SDL_GetTicks();
@@ -128,7 +127,6 @@ int main(void){
         render(renderer, &player, &bullet, wave, &bonus_enemy, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, png_bonus, mushroom, micro5, score);
         
         if (lives <= 0){
-           win = false ;
            break ;
         }
         if (enemy_compt <= 0){
@@ -149,13 +147,12 @@ int main(void){
         }
         
         if (enemy_down(wave,round)){
-            win = false ;
             break ;
         }
     }
 
-    if (win) printf("vous avez gagné \n") ;
-    else printf("vous avez perdu \n") ;
+    printf("Félicitation, vous avez vaincu %d rounds !\n", round.number-1) ;
+    printf("votre score est de %d points !\n", score) ;
     free(wave);
     free(enemy_bullet);
     SDL_DestroyTexture(heart);
