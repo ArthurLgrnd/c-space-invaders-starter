@@ -5,9 +5,6 @@
 #include "game.h"
 
 
-
-
-
 void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_time, float* var_move_time){
     round->number+=1;
     if (round->number<=15){*round_move_time*=0.955;} /*Facteur permettant d'avoir une division par deux au bout de 15 rounds*/

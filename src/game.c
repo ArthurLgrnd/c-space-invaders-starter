@@ -46,12 +46,12 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bulle
 
     if (*bullet_active){
         bullet->y += bullet->vy * dt;
-        if (bullet->y + bullet->h < 0)
+        if (bullet->y + bullet->h < 63) //63 correspond à la taille du HUD en haut d'écran
             *bullet_active = false;
     }
     for (int i=0 ; i<*enemy_bullet_compt ; i++){
         enemy_bullet[i].y += enemy_bullet[i].vy * dt ;
-        if (enemy_bullet[i].y>SCREEN_HEIGHT){
+        if (enemy_bullet[i].y>SCREEN_HEIGHT){ 
             *enemy_bullet_compt-=1;
             for (int j = i ; j<*enemy_bullet_compt ; j++){
                 enemy_bullet[j]=enemy_bullet[j+1] ;

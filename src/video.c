@@ -119,7 +119,6 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
         SDL_RenderFillRect(renderer, &bullet_rect);
     }
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
     for (int i=0 ; i<*enemy_bullet_compt ; i++){
         SDL_Rect enemy_bullet_rect = {
             (int)enemy_bullet[i].x, (int)enemy_bullet[i].y,
@@ -128,6 +127,12 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
             SDL_RenderCopy(renderer, mushroom, NULL, &enemy_bullet_rect);
         }
         else{
+            if (enemy_bullet[i].vy == 2*ENEMY_BULLET_SPEED){
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            }
+            else{
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+            }
             SDL_RenderFillRect(renderer, &enemy_bullet_rect);
         }
     }

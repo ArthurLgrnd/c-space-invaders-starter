@@ -129,16 +129,18 @@ int main(void){
            break ;
         }
         if (enemy_compt <= 0){
+            if (round.number%5==0){lives+=1;}
             new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
             move_sens = 1 ;
             last_move_drop = true;
             enemy_bullet_compt = 0;
             render(renderer, &player, &bullet, wave, &bonus_enemy, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, png_bonus, mushroom, micro5, score);
-            while(last_ticks+1000>SDL_GetTicks()){}
+            while(last_ticks+1000>SDL_GetTicks()){} //Petite pause avant début du round suivant
             last_ticks = SDL_GetTicks();
             last_move = last_ticks ;
             last_half_move = last_ticks ;
             last_bullet = last_ticks ;
+            last_bonus = last_ticks ;
         }
         
         if (enemy_down(wave,round)){
