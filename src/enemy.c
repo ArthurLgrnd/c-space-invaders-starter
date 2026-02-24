@@ -36,6 +36,10 @@ void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_t
         case 4:
             for (Uint8 i=ENEMY_NUMBER; i < 2*ENEMY_NUMBER ; i+=2){wave[i].type=SHIELD;}
             for (Uint8 i=2*ENEMY_NUMBER+1; i < 3*ENEMY_NUMBER ; i+=2){wave[i].type=SHIELD;}
+            do{ 
+                random=rand() % round->total_enemy;
+            } while (wave[random].type != CLASSIC) ;
+            wave[random].type = HEALER;
             break ;
         case 6:
             wave[1].type=MILITARY;
@@ -91,12 +95,89 @@ void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_t
             wave[3*ENEMY_NUMBER-1].type=SHIELD;
             wave[2*ENEMY_NUMBER+2].type=SHIELD;
             wave[3*ENEMY_NUMBER-3].type=SHIELD;
-            
+            do{ 
+                random=rand() % round->total_enemy;
+            } while (wave[random].type != CLASSIC) ;
+            wave[random].type = HEALER;
+            break ;
+        case 11:
+            for (Uint8 i=ENEMY_NUMBER*3 ; i<round->total_enemy ; i++){
+                wave[i].type = FAST ;
+            }
+            break;
+        case 12:
+            for (Uint8 i=ENEMY_NUMBER*3 ; i<round->total_enemy ; i++){
+                wave[i].type = FAST ;
+            }
+            while(repet<4){
+                do{ 
+                    random=rand() % (3*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = SHIELD;
+                repet += 1 ;
+            }
+            repet = 0 ;
+            while(repet<2){
+                do{ 
+                    random=rand() % (3*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = MILITARY;
+                repet += 1 ;
+            }
+            do{ 
+                random=rand() % (3*ENEMY_NUMBER);
+            } while (wave[random].type != CLASSIC) ;
+            wave[random].type = HEALER;
+            break;
+        case 13 :
+            for (Uint8 i=ENEMY_NUMBER*3 ; i<round->total_enemy ; i++){
+                wave[i].type = FAST ;
+            }
+            while(repet<8){
+                do{ 
+                    random=rand() % (3*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = SHIELD;
+                repet += 1 ;
+            }
+            repet = 0 ;
+            while(repet<6){
+                do{ 
+                    random=rand() % (3*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = MILITARY;
+                repet += 1 ;
+            }
+            repet = 0 ;
+            while(repet<3){
+                do{ 
+                    random=rand() % (3*ENEMY_NUMBER);
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = FAST_SHOOT;
+                repet += 1 ;
+            }
+            break ;
+        case 14 :
+            while(repet<4){
+                do{ 
+                    random=rand() % round->total_enemy;
+                } while (wave[random].type != CLASSIC) ;
+                wave[random].type = HEALER;
+                repet += 1 ;
+            }
+            break ;
     }
-
-
+    if (round->number > 15 && round->number%5!=0){
+        Uint8 fast_lines = rand()%3 ; //Nombre de lignes FAST aléatoire entre 0 et 2
+        for (Uint8 i=ENEMY_NUMBER*(4-fast_lines) ; i<round->total_enemy ; i++){
+                wave[i].type = FAST ;
+            }
+        for (Uint8 i=0 ; i<ENEMY_NUMBER*(4-fast_lines) ; i++){
+                wave[i].type = rand()%4 ; //Choix aléatoire entre classique, shield, military et fast_shoot
+            }
+        wave[rand()%(ENEMY_NUMBER*(4-fast_lines))].type = HEALER ; //Un healer au hasard parmis ceux qui ne sont pas des FAST
+    }
     *enemy_compt=round->total_enemy ;
-    
 }
 
 
@@ -173,9 +254,11 @@ bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt,
 void update_enemy(Enemy* wave, Round round, short* move_sens, bool* last_move_drop, float* move_time){
     if (!*last_move_drop){
         for (Uint8 i=0 ; i<round.total_enemy ; i++){
-            if (wave[i].alive==1 && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
+            if ((wave[i].type != FAST) && (wave[i].alive==1) && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
                 for (Uint8 j=0 ; j<round.total_enemy ; j++){
-                    wave[j].y+=ENEMY_DROP ;
+                    if (wave[j].type!=FAST){
+                        wave[j].y+=ENEMY_DROP ;
+                    }
                 }
                 *move_sens*=-1 ;
                 *last_move_drop = true ;
@@ -187,17 +270,34 @@ void update_enemy(Enemy* wave, Round round, short* move_sens, bool* last_move_dr
     else{*last_move_drop=false;}
     if (!*last_move_drop){
         for (Uint8 i=0 ; i<round.total_enemy ; i++){
-            if (wave[i].alive==1){
+            if (wave[i].alive==1 && wave[i].type != FAST){
                 wave[i].x+=ENEMY_MOVE* *move_sens ;
             }
         }
     }
 }
 
-void update_fast_enemy(Enemy* wave, Round round, short move_sens){
-    for (Uint8 i=0 ; i<round.total_enemy ; i++){
-        if (wave[i].type == FAST){
-            wave[i].x+=move_sens * ENEMY_MOVE;
+void update_fast_enemy(Enemy* wave, Round round, short* fast_move_sens, bool* fast_last_move_drop){
+    if (!*fast_last_move_drop){
+        for (Uint8 i=0 ; i<round.total_enemy ; i++){
+            if ((wave[i].type == FAST) && (wave[i].alive==1) && (wave[i].x<=ENEMY_BORDER || wave[i].x>=SCREEN_WIDTH-ENEMY_BORDER-ENEMY_WIDTH)){
+                for (Uint8 j=0 ; j<round.total_enemy ; j++){
+                    if (wave[j].type==FAST){
+                        wave[j].y+=ENEMY_DROP ;
+                    }
+                }
+                *fast_move_sens*=-1 ;
+                *fast_last_move_drop = true ;
+                break ;
+            }
+        }
+    }
+    else{*fast_last_move_drop=false;}
+    if (!*fast_last_move_drop){
+        for (Uint8 i=0 ; i<round.total_enemy ; i++){
+            if (wave[i].alive==1 && wave[i].type == FAST){
+                wave[i].x+=ENEMY_MOVE* *fast_move_sens ;
+            }
         }
     }
 }

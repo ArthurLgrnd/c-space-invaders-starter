@@ -18,18 +18,18 @@
 
 #define ENEMY_BULLET_WIDTH 5
 #define ENEMY_BULLET_HEIGHT 20
-#define ENEMY_BULLET_SPEED 600.0f
+#define ENEMY_BULLET_SPEED 500.0f
 
 typedef enum {
-    CLASSIC=0, /*ok 10*/
-    SHIELD=1, /*ok*/
-    MILITARY=2, /*Tir plus souvent*/   /*ok 30*/
-    FAST_SHOOT=3, /*ok 30*/
-    NINJA=4, /*Rapide à descendre*/   /*~~ok 50, juste voir si faire en sorte que target ne soit jamais un ninja(faire une 2ème boucle) || autre idée de refonte : choisi une colonne au hasard et se place en haut ou bas parmis les vivants non NINJA*/
-    FAST=5, /*Rapide sur les côtés*/   /*~~ok 30*/
-    HEALER=6, /*ok 10*/
-    BR_SHIELD=7, /*ok*/
-    NO_SHIELD=8, /*ok 30*/
+    CLASSIC=0,
+    SHIELD=1,
+    MILITARY=2, /*Tir plus souvent*/
+    FAST_SHOOT=3,
+    NINJA=4, /*Rapide à descendre*/ /*~~ok 50, juste voir si faire en sorte que target ne soit jamais un ninja(faire une 2ème boucle) || autre idée de refonte : choisi une colonne au hasard et se place en haut ou bas parmis les vivants non NINJA*/
+    FAST=5, /*Rapide sur les côtés*/
+    HEALER=6,
+    BR_SHIELD=7,
+    NO_SHIELD=8,
     BONUS=9
 } Enemy_types ;
 
@@ -55,7 +55,7 @@ typedef struct
 void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_time, float* var_move_time) ;
 bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt, Uint8* enemy_bullet_max, Enemy_bullet** enemy_bullet, Round round) ;
 void update_enemy(Enemy* wave, Round round, short* move_sens, bool* last_move_drop, float* move_time) ;
-void update_fast_enemy(Enemy* wave, Round round, short move_sens);
+void update_fast_enemy(Enemy* wave, Round round, short* fast_move_sens, bool* fast_last_move_drop);
 void ninja_dash(Enemy* wave, Round round, Uint8 enemy_compt) ;
 void new_bonus(Enemy* bonus_enemy, float* bonus_time, short* bonus_sens);
 bool enemy_down(Enemy* wave, Round round) ;
