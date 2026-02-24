@@ -22,6 +22,7 @@ int main(void){
     init_invaders(invaders, renderer) ;
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
     SDL_Texture* mushroom = init_image(renderer, "./images/mushroom.png") ;
+    SDL_Texture* png_bonus = init_image(renderer, "./images/bonus.png") ;
 
     TTF_Font* micro5= TTF_OpenFont("./Micro5-Regular.ttf", 80) ;
 
@@ -54,13 +55,23 @@ int main(void){
     Round round = {0, 2*ENEMY_NUMBER} ;
     Enemy* wave = malloc (sizeof(Enemy)*4*ENEMY_NUMBER) ;
     Uint8 enemy_compt = 0 ;
+    Enemy bonus_enemy = {
+        .x = -10-BONUS_WIDTH,
+        .y = 90,
+        .w = ENEMY_WIDTH,
+        .h = ENEMY_HEIGHT,
+        .alive = false,
+        .type = BONUS
+    } ;
+    Uint32 last_bonus = last_ticks ;
+    float bonus_time = (rand()/(float)(RAND_MAX) * 30) ; /*Apparition d'un bonus en moyenne toute les 15 secondes, au plus toutes les 30 secondes. Ce temps sera comptabilisé après la disparition ou la mort du bonus précédent*/
+    short bonus_sens = 1 ;/*1 si le bonus va vers la droite, -1 s'il va vers la gauche*/
 
     Uint8 enemy_bullet_compt = 0 ;
     Enemy_bullet* enemy_bullet = malloc(sizeof(Enemy_bullet)*2);
     Uint8 enemy_bullet_max = 2 ; /*maximum de tirs ennemis stockables pour le moment*/
-    float enemy_bullet_time = 0.8 ; /*Temps moyen entre chaque tir ennemi*/
+    float enemy_bullet_time = 1.5 ; /*Temps moyen entre chaque tir ennemi*/
     float var_enemy_bullet_time = (rand()/(float)(RAND_MAX) * 2 * enemy_bullet_time) ;
-    printf("%f", var_enemy_bullet_time);
     Uint32 last_bullet = last_ticks ;
 
     new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
@@ -77,7 +88,8 @@ int main(void){
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         handle_input(&running, keys, &player, &bullet, &bullet_active);
 
-        update_pos(&player, &bullet, &bullet_active, enemy_bullet, &enemy_bullet_compt, dt);
+        update_pos(&player, &bullet, &bullet_active, enemy_bullet, &enemy_bullet_compt, dt, &bonus_enemy, bonus_sens, &last_bonus);
+    
 
         if (bullet_active){
             kill_enemy(&bullet, &bullet_active, wave, round, &enemy_compt, &score);
@@ -103,7 +115,14 @@ int main(void){
                 break ;
             }
         }
-        render(renderer, &player, &bullet, wave, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
+
+        if (!bonus_enemy.alive){
+            if ((ticks - last_bonus)/1000.0f > bonus_time){
+                new_bonus(&bonus_enemy, &bonus_time, &bonus_sens) ;
+            }
+        }
+
+        render(renderer, &player, &bullet, wave, &bonus_enemy, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, png_bonus, mushroom, micro5, score);
         
         if (lives <= 0){
            win = false ;
@@ -114,7 +133,7 @@ int main(void){
             move_sens = 1 ;
             last_move_drop = true;
             enemy_bullet_compt = 0;
-            render(renderer, &player, &bullet, wave, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, mushroom, micro5, score);
+            render(renderer, &player, &bullet, wave, &bonus_enemy, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, png_bonus, mushroom, micro5, score);
             while(last_ticks+1000>SDL_GetTicks()){}
             last_ticks = SDL_GetTicks();
             last_move = last_ticks ;

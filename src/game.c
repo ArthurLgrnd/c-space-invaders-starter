@@ -35,7 +35,7 @@ void handle_input(bool *running, const Uint8 *keys, Entity *player, Entity *bull
 }
 
 
-void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, float dt)
+void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, float dt, Enemy* bonus_enemy, short bonus_sens, Uint32* last_bonus)
 {
     player->x += player->vx * dt;
 
@@ -57,6 +57,13 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bulle
                 enemy_bullet[j]=enemy_bullet[j+1] ;
             }
             i-=1 ;
+        }
+    }
+    if (bonus_enemy->alive){
+        bonus_enemy->x+=BONUS_SPEED*bonus_sens*dt ;
+        if ((bonus_enemy->x > SCREEN_WIDTH) || (bonus_enemy->x < -bonus_enemy->w)){
+            bonus_enemy->alive = false ;
+            *last_bonus = SDL_GetTicks() ;
         }
     }
 }

@@ -79,7 +79,7 @@ void draw_text(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, char* te
     SDL_FreeSurface(surface);
 }
 
-void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, bool bullet_active, Round round, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* mushroom, TTF_Font* micro5, Uint32 score)
+void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave, Enemy* bonus_enemy, bool bullet_active, Round round, Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, SDL_Texture* heart, Uint8 lives, SDL_Texture** invaders, SDL_Texture* png_player, SDL_Texture* png_bonus, SDL_Texture* mushroom, TTF_Font* micro5, Uint32 score)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -101,6 +101,13 @@ void render(SDL_Renderer *renderer, Entity *player, Entity *bullet, Enemy *wave,
                 wave[i].w, wave[i].h} ;
             SDL_RenderCopy(renderer, invaders[wave[i].type], NULL ,&enemy_rect) ;
         }
+    }
+
+    if (bonus_enemy->alive){
+        SDL_Rect bonus_rect = {
+            (int)bonus_enemy->x, (int)bonus_enemy->y,
+            bonus_enemy->w, bonus_enemy->h} ;
+        SDL_RenderCopy(renderer, png_bonus, NULL, &bonus_rect) ;
     }
 
     if (bullet_active)

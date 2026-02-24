@@ -12,6 +12,10 @@
 #define ENEMY_BORDER 20
 #define ENEMY_DROP 42 //distance descendue par cran
 
+#define BONUS_WIDTH 60
+#define BONUS_HEIGHT 26 /*Recommandé ~*0.44 par rapport à BONUS_WIDTH*/
+#define BONUS_SPEED 200.0f
+
 #define ENEMY_BULLET_WIDTH 5
 #define ENEMY_BULLET_HEIGHT 20
 #define ENEMY_BULLET_SPEED 600.0f
@@ -25,7 +29,8 @@ typedef enum {
     FAST=5, /*Rapide sur les côtés*/   /*~~ok 30*/
     HEALER=6, /*ok 10*/
     BR_SHIELD=7, /*ok*/
-    NO_SHIELD=8 /*ok 30*/
+    NO_SHIELD=8, /*ok 30*/
+    BONUS=9
 } Enemy_types ;
 
 typedef struct
@@ -52,6 +57,7 @@ bool new_enemy_bullet(Enemy* wave, Uint8 enemy_compt, Uint8* enemy_bullet_compt,
 void update_enemy(Enemy* wave, Round round, short* move_sens, bool* last_move_drop, float* move_time) ;
 void update_fast_enemy(Enemy* wave, Round round, short move_sens);
 void ninja_dash(Enemy* wave, Round round, Uint8 enemy_compt) ;
+void new_bonus(Enemy* bonus_enemy, float* bonus_time, short* bonus_sens);
 bool enemy_down(Enemy* wave, Round round) ;
 
 

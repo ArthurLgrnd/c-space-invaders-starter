@@ -12,14 +12,14 @@ void new_wave(Enemy* wave, Round* round, Uint8* enemy_compt, float* round_move_t
     round->number+=1;
     if (round->number<=15){*round_move_time*=0.955;} /*Facteur permettant d'avoir une division par deux au bout de 15 rounds*/
     *var_move_time = *round_move_time ;
-    if (round->number % 5 ==0){round->total_enemy = 1 ;}
+    if (round->number % 5 ==0){round->total_enemy = 1 ;} /*Round boss*/
     else if (round->number==1){round->total_enemy = 2 * ENEMY_NUMBER ;}
     else if (round->number<=9){round->total_enemy = 3 * ENEMY_NUMBER ;}
     else {round->total_enemy = 4 * ENEMY_NUMBER ;}
 
     for (int i=0 ; i<round->total_enemy; i++){
         wave[i].x = 20 + (i%ENEMY_NUMBER) * (ENEMY_WIDTH + 20) ;
-        wave[i].y = 80 + i/ENEMY_NUMBER * (ENEMY_HEIGHT +10) ;
+        wave[i].y = 120 + i/ENEMY_NUMBER * (ENEMY_HEIGHT +10) ;
         wave[i].alive = true ;
         wave[i].w = ENEMY_WIDTH ;
         wave[i].h = ENEMY_HEIGHT ;
@@ -243,6 +243,19 @@ void ninja_dash(Enemy* wave, Round round, Uint8 enemy_compt){
             wave[choosen_ninja].y = wave[target_number].y + (new_pos - target_number)/10 * (ENEMY_HEIGHT + 10) ;
         }
     }
+}
+
+void new_bonus(Enemy* bonus_enemy, float* bonus_time, short* bonus_sens){
+    bonus_enemy->alive = true ;
+    if (rand()%2==0){
+        bonus_enemy->x = -bonus_enemy->w ;
+        *bonus_sens = 1 ;
+    }
+    else{
+        bonus_enemy->x = SCREEN_WIDTH ;
+        *bonus_sens = -1 ;
+    }
+    *bonus_time = (rand()/(float)(RAND_MAX) * 30) ;
 }
 
 bool enemy_down(Enemy* wave, Round round){
