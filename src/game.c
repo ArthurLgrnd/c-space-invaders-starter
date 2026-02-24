@@ -68,7 +68,7 @@ void update_pos(Entity *player, Entity *bullet, bool *bullet_active, Enemy_bulle
     }
 }
 
-void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Round round, Uint8* enemy_compt, Uint32* score){
+void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Round round, Uint8* enemy_compt, Uint32* score, Enemy* bonus_enemy, Uint32* last_bonus, Uint8* lives){
     for (Uint8 i=0 ; i<round.total_enemy ; i++){
         if ((((wave[i].y <= bullet->y) && (bullet->y <= wave[i].y + wave[i].h)) || ((wave[i].y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= wave[i].y + wave[i].h)) ) && (((wave[i].x <= bullet->x) && (bullet->x <= wave[i].x + wave[i].w)) || ((wave[i].x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= wave[i].x + wave[i].w)) ) ){
             if (wave[i].type == SHIELD){
@@ -89,6 +89,20 @@ void kill_enemy(Entity *bullet, bool *bullet_active, Enemy *wave, Round round, U
             break ;
         }
     }
+    if (bullet_active && bonus_enemy->alive){
+        if ((((bonus_enemy->y <= bullet->y) && (bullet->y <= bonus_enemy->y + bonus_enemy->h)) || ((bonus_enemy->y <= bullet->y + bullet->h) && (bullet->y + bullet->h <= bonus_enemy->y + bonus_enemy->h)) ) && (((bonus_enemy->x <= bullet->x) && (bullet->x <= bonus_enemy->x + bonus_enemy->w)) || ((bonus_enemy->x <= bullet->x + bullet->w) && (bullet->x + bullet->w <= bonus_enemy->x + bonus_enemy->w)) ) ){
+            bonus_enemy->alive = false ;
+            if (rand()%4==0){ //une chance sur quatre de récupérer une vie
+                *lives+=1 ;
+            }
+            else{
+                *score +=200 ;
+            }
+            *last_bonus = SDL_GetTicks() ;
+            *bullet_active = false ;
+        }   
+    }
+
 }
 
 void damage_player(Enemy_bullet* enemy_bullet, Uint8* enemy_bullet_compt, Entity player, Uint8* lives){

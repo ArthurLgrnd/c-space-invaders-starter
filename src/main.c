@@ -92,7 +92,7 @@ int main(void){
     
 
         if (bullet_active){
-            kill_enemy(&bullet, &bullet_active, wave, round, &enemy_compt, &score);
+            kill_enemy(&bullet, &bullet_active, wave, round, &enemy_compt, &score, &bonus_enemy, &last_bonus, &lives);
         }
 
         damage_player(enemy_bullet, &enemy_bullet_compt, player, &lives) ;
