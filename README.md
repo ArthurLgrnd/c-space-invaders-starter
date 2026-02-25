@@ -27,7 +27,7 @@ Les autres rounds possèdes différents types d'ennemis :
 De plus, vous pourrez voir apparaître en haut de l'écran des vaisseaux rouges. Ce sont des **bonus**. Abattez-les pour remporter une vie supplémentaire (une chance sur 4) ou bien 200 points.
 
 
-Le jeu est compliqué, et atteindre le round 16 correspondant à la fin des niveaux pré-paramétrés peut s'avérer très difficile avec les paramètres initialement choisis. Afin de découvrir le jeu de manière plus paisible, vous pouvez aller à la ligne 32 du fichier main.c et changer à votre guise le nombre de vie initial. Votre nombre de vie doit seulement ne pas dépasser 255 (Uint8)
+Le jeu est compliqué, et atteindre le round 16 correspondant à la fin des niveaux pré-paramétrés peut s'avérer très difficile avec les paramètres initialement choisis. Afin de découvrir le jeu de manière plus paisible, vous pouvez aller à la ligne 35 du fichier main.c et changer à votre guise le nombre de vie initial. Votre nombre de vie doit seulement ne pas dépasser 255 (Uint8)
 
 ## Informations sur l'organisation du code
 L'ensemble des fonctions utilisées sont réparties sur 3 fichiers : 

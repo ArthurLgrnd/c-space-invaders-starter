@@ -11,6 +11,9 @@
 #include "video.h"
     
 int main(void){
+
+    // Initialisation de SDL et des png et de la police utilisés
+
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     if (!init(&window, &renderer))
@@ -23,16 +26,17 @@ int main(void){
     SDL_Texture* png_player = init_image(renderer, "./images/player.png") ;
     SDL_Texture* mushroom = init_image(renderer, "./images/mushroom.png") ;
     SDL_Texture* png_bonus = init_image(renderer, "./images/bonus.png") ;
-
     TTF_Font* micro5= TTF_OpenFont("./Micro5-Regular.ttf", 80) ;
 
     srand(time(NULL)) ;
-
+    
+    // Initialisation de paramètres générales du jeu
     bool running = true;
     Uint8 lives = 3 ;
     Uint32 score = 0 ;
     Uint32 last_ticks = SDL_GetTicks();
 
+    //Initialisation du joueur et de ses balles
     Entity player = {
         .x = SCREEN_WIDTH / 2 - PLAYER_WIDTH / 2,
         .y = SCREEN_HEIGHT - 60,
@@ -40,23 +44,26 @@ int main(void){
         .h = PLAYER_HEIGHT,
         .vx = 0,
         .vy = 0};
-
     Entity bullet = {0};
-
     bool bullet_active = false;
+    
+    //Initialisation des ennemis (1ère vague) et de leurs déplacements
+    Round round = {0, 2*ENEMY_NUMBER} ;
+    Enemy* wave = malloc (sizeof(Enemy)*4*ENEMY_NUMBER) ;
+    Uint8 enemy_compt = 0 ;
+
     Uint32 last_move = last_ticks ;
     Uint32 last_half_move = last_ticks ; /*temps pour les mouvements supplémentaires des ennemis FAST*/
     float round_move_time = 1.3 ; /*Temps entre chaque déplacement d'ennemis qui évolue avec les nouveau round*/  
     float var_move_time = round_move_time ; /*Temps entre chaque déplacement d'ennemis qui évolue au sein du d'un round*/
     short move_sens = 1 ;
-    bool last_move_drop = true ;
-
-    short fast_move_sens = 1;
+    bool last_move_drop = true ; //paramètre permettant d'éviter que les ennemis descendent deux mouvements de suite
+    short fast_move_sens = 1; //Cette variable et la suivante sont des paramètres spécifiques des déplacemetns des ennemis FAST.
     bool fast_last_move_drop = true ;
 
-    Round round = {20, 2*ENEMY_NUMBER} ;
-    Enemy* wave = malloc (sizeof(Enemy)*4*ENEMY_NUMBER) ;
-    Uint8 enemy_compt = 0 ;
+    new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
+
+    //Initialisation du bonus et de ses variables associés
     Enemy bonus_enemy = {
         .x = -10-BONUS_WIDTH,
         .y = 90,
@@ -69,6 +76,7 @@ int main(void){
     float bonus_time = (rand()/(float)(RAND_MAX) * 30) ; /*Apparition d'un bonus en moyenne toute les 15 secondes, au plus toutes les 30 secondes. Ce temps sera comptabilisé après la disparition ou la mort du bonus précédent*/
     short bonus_sens = 1 ;/*1 si le bonus va vers la droite, -1 s'il va vers la gauche*/
 
+    //Initialisation des balles et tirs ennemis
     Uint8 enemy_bullet_compt = 0 ;
     Enemy_bullet* enemy_bullet = malloc(sizeof(Enemy_bullet)*2);
     Uint8 enemy_bullet_max = 2 ; /*maximum de tirs ennemis stockables pour le moment*/
@@ -76,8 +84,7 @@ int main(void){
     float var_enemy_bullet_time = (rand()/(float)(RAND_MAX) * 2 * enemy_bullet_time) ;
     Uint32 last_bullet = last_ticks ;
 
-    new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
-
+    //Début de la boucle de jeu
     while (running)
     {
         Uint32 ticks = SDL_GetTicks();
@@ -132,6 +139,7 @@ int main(void){
         if (enemy_compt <= 0){
             if (round.number%5==0){lives+=1;}
             new_wave(wave, &round, &enemy_compt, &round_move_time, &var_move_time) ;
+            //On remet à 0 les variables d'informations sur les derniers déplacements des ennemis
             move_sens = 1 ;
             last_move_drop = true;
             fast_move_sens = 1;
@@ -139,6 +147,7 @@ int main(void){
             enemy_bullet_compt = 0;
             render(renderer, &player, &bullet, wave, &bonus_enemy, bullet_active, round, enemy_bullet, &enemy_bullet_compt, heart, lives, invaders, png_player, png_bonus, mushroom, micro5, score);
             while(last_ticks+1000>SDL_GetTicks()){} //Petite pause avant début du round suivant
+            //Puis on remet tous les évennemetns dépendant d'un temps précis à 0
             last_ticks = SDL_GetTicks();
             last_move = last_ticks ;
             last_half_move = last_ticks ;
